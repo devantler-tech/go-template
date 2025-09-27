@@ -1,0 +1,18 @@
+name: Release
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release:
+    uses: devantler-tech/reusable-workflows/.github/workflows/release.yaml@800bac1f7de14fcc6b9b9bcf62e201308eafd15b # v1.15.12
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}

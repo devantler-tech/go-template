@@ -1,0 +1,37 @@
+version: "2"
+run:
+  allow-parallel-runners: true
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+    - goimports
+    - golines
+    - swaggo
+linters:
+  default: all
+  enable:
+    - wsl_v5
+  disable:
+    - exhaustruct
+    - wsl
+  exclusions:
+    paths:
+      # Exclude auto-generated mock files from all linting rules
+      - ".*mocks.*\\.go$"
+      - ".*_mocks_.*\\.go$"
+  settings:
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2
+    depguard:
+      rules:
+        main:
+          files:
+            - "$all"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd

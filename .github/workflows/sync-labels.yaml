@@ -1,0 +1,20 @@
+---
+name: Sync labels
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1"
+
+permissions:
+  issues: write
+
+jobs:
+  sync-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📑 Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - name: 🔄 Sync labels
+        uses: devantler-tech/composite-actions/sync-labels-action@005c37f8ef5e1811388cf19b3b93eb721351b6be # v1.9.5
