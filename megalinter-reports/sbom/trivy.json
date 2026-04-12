@@ -1,0 +1,86 @@
+{
+    "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+    "bomFormat": "CycloneDX",
+    "specVersion": "1.6",
+    "serialNumber": "urn:uuid:55cf49c9-f7e8-4b5f-be97-ac1a47911114",
+    "version": 1,
+    "metadata": {
+        "timestamp": "2026-04-12T12:51:52+00:00",
+        "tools": {
+            "components": [
+                {
+                    "type": "application",
+                    "manufacturer": {
+                        "name": "Aqua Security Software Ltd."
+                    },
+                    "group": "aquasecurity",
+                    "name": "trivy",
+                    "version": "0.69.1"
+                }
+            ]
+        },
+        "component": {
+            "bom-ref": "78aa18a4-1b7d-4624-9d6d-d0d1a3bb921c",
+            "type": "application",
+            "name": ".",
+            "properties": [
+                {
+                    "name": "aquasecurity:trivy:SchemaVersion",
+                    "value": "2"
+                }
+            ]
+        }
+    },
+    "components": [
+        {
+            "bom-ref": "f5916a09-d2f9-4d21-ba24-6ea2ef7cea66",
+            "type": "application",
+            "name": "go.mod",
+            "properties": [
+                {
+                    "name": "aquasecurity:trivy:Class",
+                    "value": "lang-pkgs"
+                },
+                {
+                    "name": "aquasecurity:trivy:Type",
+                    "value": "gomod"
+                }
+            ]
+        },
+        {
+            "bom-ref": "pkg:golang/github.com/devantler-tech/go-template",
+            "type": "library",
+            "name": "github.com/devantler-tech/go-template",
+            "purl": "pkg:golang/github.com/devantler-tech/go-template",
+            "properties": [
+                {
+                    "name": "aquasecurity:trivy:PkgID",
+                    "value": "github.com/devantler-tech/go-template"
+                },
+                {
+                    "name": "aquasecurity:trivy:PkgType",
+                    "value": "gomod"
+                }
+            ]
+        }
+    ],
+    "dependencies": [
+        {
+            "ref": "78aa18a4-1b7d-4624-9d6d-d0d1a3bb921c",
+            "dependsOn": [
+                "f5916a09-d2f9-4d21-ba24-6ea2ef7cea66"
+            ]
+        },
+        {
+            "ref": "f5916a09-d2f9-4d21-ba24-6ea2ef7cea66",
+            "dependsOn": [
+                "pkg:golang/github.com/devantler-tech/go-template"
+            ]
+        },
+        {
+            "ref": "pkg:golang/github.com/devantler-tech/go-template",
+            "dependsOn": []
+        }
+    ],
+    "vulnerabilities": []
+}

@@ -1,0 +1,12 @@
+[0000]  WARN no explicit name and version provided for directory source, deriving artifact ID from the given path (which is not ideal)
+NAME                                                                             VERSION  TYPE                                     
+actions/checkout                                                                 v6.0.0   github-action           (+2 duplicates)  
+actions/setup-go                                                                 v6.1.0   github-action           (+1 duplicate)   
+actions/setup-node                                                               v5.0.0   github-action                            
+devantler-tech/actions/sync-labels-action                                        v1.9.5   github-action                            
+devantler-tech/reusable-workflows/.github/workflows/create-release.yaml          v1.33.0  github-action-workflow                   
+devantler-tech/reusable-workflows/.github/workflows/scan-for-todo-comments.yaml  v1.33.0  github-action-workflow                   
+docker/login-action                                                              v3.5.0   github-action                            
+docker/setup-buildx-action                                                       v3.11.1  github-action                            
+github.com/devantler-tech/go-template                                            UNKNOWN  go-module                                
+goreleaser/goreleaser-action                                                     v6.4.0   github-action
