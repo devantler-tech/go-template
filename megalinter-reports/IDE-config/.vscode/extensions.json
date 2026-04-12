@@ -1,8 +1,0 @@
-{
-    "recommendations": [
-        "ms-vscode.Go",
-        "esbenp.prettier-vscode",
-        "AquaSecurityOfficial.trivy-vulnerability-scanner",
-        "streetsidesoftware.code-spell-checker"
-    ]
-}
