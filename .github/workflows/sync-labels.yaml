@@ -12,9 +12,14 @@ jobs:
   sync-labels:
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+
       - name: 📑 Checkout
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           persist-credentials: false
       - name: 🔄 Sync labels
-        uses: devantler-tech/actions/sync-labels-action@005c37f8ef5e1811388cf19b3b93eb721351b6be # v1.9.5
+        uses: devantler-tech/actions/sync-github-labels@4235593b654b467bb57c2d2f492b1461eab37cba # v2.1.0
