@@ -12,7 +12,7 @@ The MegaLinter documentation can be found at:
 MegaLinter will analyze workspace [/github/workspace]
 GITHUB_REPOSITORY: devantler-tech/go-template
 GITHUB_REF: refs/pull/19/merge
-GITHUB_RUN_ID: 24307472410
+GITHUB_RUN_ID: 24307541942
 PAT: not set
 
 [Activation] ANSIBLE_ANSIBLE_LINT has been set inactive, as none of these files has been found: ['.ansible-lint', '.ansible-lint.yml', '.ansible-lint.yaml', '.config/ansible-lint.yml', '.config/ansible-lint.yaml']
@@ -79,7 +79,7 @@ Kept [17] files on [19] found files
 +------------+--------------------------+------------------------------------------------------------------------+----------------+------------+
 ::endgroup::
 Processing linters on [4] parallel cores… (can be decreased with variable PARALLEL_PROCESS_NUMBER in case of performance issues)
-::group::[32m✅ Linted [JSON] files with [jsonlint] successfully - (0.44s)[0m (expand for details)
+::group::[32m✅ Linted [JSON] files with [jsonlint] successfully - (0.34s)[0m (expand for details)
 - Using [jsonlint v17.0.1] https://megalinter.io/9.4.0/descriptors/json_jsonlint
 - MegaLinter key: [JSON_JSONLINT]
 - Rules config: identified by [jsonlint]
@@ -87,8 +87,7 @@ Processing linters on [4] parallel cores… (can be decreased with variable PARA
 - CWD: [/github/workspace]
 - Command: [jsonlint --quiet .github/renovate.json cspell.json]
 ::endgroup::
-::group::[32m✅ Linted [YAML] files with [prettier] successfully - (0.89s)[0m (expand for details)
-::group::[32m✅ Linted [MARKDOWN] files with [markdownlint] successfully - (0.84s)[0m (expand for details)
+::group::[32m✅ Linted [YAML] files with [prettier] successfully - (0.74s)[0m (expand for details)
 - Using [prettier v3.8.1] https://megalinter.io/9.4.0/descriptors/yaml_prettier
 - MegaLinter key: [YAML_PRETTIER]
 - Rules config: identified by [prettier]
@@ -96,6 +95,7 @@ Processing linters on [4] parallel cores… (can be decreased with variable PARA
 - CWD: [/github/workspace]
 - Command: [prettier --write .github/codecov.yml .github/workflows/cd.yaml .github/workflows/copilot-setup-steps.yml .github/workflows/release.yaml .github/workflows/sync-labels.yaml .github/workflows/todos.yaml .golangci.yml .mega-linter.yml .pre-commit-config....(truncated)]
 ::endgroup::
+::group::[32m✅ Linted [MARKDOWN] files with [markdownlint] successfully - (0.6s)[0m (expand for details)
 - Using [markdownlint v0.47.0] https://megalinter.io/9.4.0/descriptors/markdown_markdownlint
 - MegaLinter key: [MARKDOWN_MARKDOWNLINT]
 - Rules config: [.markdownlint.json]
@@ -103,15 +103,7 @@ Processing linters on [4] parallel cores… (can be decreased with variable PARA
 - CWD: [/github/workspace]
 - Command: [markdownlint --fix -c /action/lib/.automation/.markdownlint.json README.md]
 ::endgroup::
-::group::[32m✅ Linted [MARKDOWN] files with [markdown-table-formatter] successfully - (0.28s)[0m (expand for details)
-- Using [markdown-table-formatter v1.7.0] https://megalinter.io/9.4.0/descriptors/markdown_markdown_table_formatter
-- MegaLinter key: [MARKDOWN_MARKDOWN_TABLE_FORMATTER]
-- Rules config: identified by [markdown-table-formatter]
-- Number of files analyzed: [1]
-- CWD: [/github/workspace]
-- Command: [markdown-table-formatter README.md]
-::endgroup::
-::group::[32m✅ Linted [YAML] files with [yamllint] successfully - (0.51s)[0m (expand for details)
+::group::[32m✅ Linted [YAML] files with [yamllint] successfully - (0.42s)[0m (expand for details)
 - Using [yamllint v1.38.0] https://megalinter.io/9.4.0/descriptors/yaml_yamllint
 - MegaLinter key: [YAML_YAMLLINT]
 - Rules config: [.yamllint.yml]
@@ -119,7 +111,15 @@ Processing linters on [4] parallel cores… (can be decreased with variable PARA
 - CWD: [/github/workspace]
 - Command: [yamllint --format standard -c /action/lib/.automation/.yamllint.yml .github/codecov.yml .github/workflows/cd.yaml .github/workflows/copilot-setup-steps.yml .github/workflows/release.yaml .github/workflows/sync-labels.yaml .github/workflows/todos.yaml...(truncated)]
 ::endgroup::
-::group::[32m✅ Linted [JSON] files with [v8r] successfully - (2.71s)[0m (expand for details)
+::group::[32m✅ Linted [MARKDOWN] files with [markdown-table-formatter] successfully - (0.25s)[0m (expand for details)
+- Using [markdown-table-formatter v1.7.0] https://megalinter.io/9.4.0/descriptors/markdown_markdown_table_formatter
+- MegaLinter key: [MARKDOWN_MARKDOWN_TABLE_FORMATTER]
+- Rules config: identified by [markdown-table-formatter]
+- Number of files analyzed: [1]
+- CWD: [/github/workspace]
+- Command: [markdown-table-formatter README.md]
+::endgroup::
+::group::[32m✅ Linted [JSON] files with [v8r] successfully - (2.48s)[0m (expand for details)
 - Using [v8r v6.0.0] https://megalinter.io/9.4.0/descriptors/json_v8r
 - MegaLinter key: [JSON_V8R]
 - Rules config: identified by [v8r]
@@ -127,14 +127,14 @@ Processing linters on [4] parallel cores… (can be decreased with variable PARA
 - CWD: [/github/workspace]
 - Command: [v8r --ignore-errors .github/renovate.json cspell.json]
 ::endgroup::
-::group::[32m✅ Linted [COPYPASTE] files with [jscpd] successfully - (1.26s)[0m (expand for details)
+::group::[32m✅ Linted [COPYPASTE] files with [jscpd] successfully - (1.03s)[0m (expand for details)
 - Using [jscpd v4.0.8] https://megalinter.io/9.4.0/descriptors/copypaste_jscpd
 - MegaLinter key: [COPYPASTE_JSCPD]
 - Rules config: [.jscpd.json]
 - CWD: [/github/workspace]
 - Command: [jscpd --gitignore --reporters console,html --output /github/workspace/megalinter-reports/copy-paste/ -c /action/lib/.automation/.jscpd.json .]
 ::endgroup::
-::group::[32m✅ Linted [JSON] files with [prettier] successfully - (0.66s)[0m (expand for details)
+::group::[32m✅ Linted [JSON] files with [prettier] successfully - (0.7s)[0m (expand for details)
 - Using [prettier v3.8.1] https://megalinter.io/9.4.0/descriptors/json_prettier
 - MegaLinter key: [JSON_PRETTIER]
 - Rules config: identified by [prettier]
@@ -142,14 +142,14 @@ Processing linters on [4] parallel cores… (can be decreased with variable PARA
 - CWD: [/github/workspace]
 - Command: [prettier --write .github/renovate.json cspell.json]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [secretlint] successfully - (1.13s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [secretlint] successfully - (0.95s)[0m (expand for details)
 - Using [secretlint v11.3.1] https://megalinter.io/9.4.0/descriptors/repository_secretlint
 - MegaLinter key: [REPOSITORY_SECRETLINT]
 - Rules config: [.secretlintrc.json]
 - CWD: [/github/workspace]
 - Command: [secretlint --secretlintrc /action/lib/.automation/.secretlintrc.json **/*]
 ::endgroup::
-::group::[32m✅ Linted [SPELL] files with [cspell] successfully - (4.09s)[0m (expand for details)
+::group::[32m✅ Linted [SPELL] files with [cspell] successfully - (3.87s)[0m (expand for details)
 - Using [cspell v9.7.0] https://megalinter.io/9.4.0/descriptors/spell_cspell
 - MegaLinter key: [SPELL_CSPELL]
 - Rules config: identified by [cspell]
@@ -157,7 +157,7 @@ Processing linters on [4] parallel cores… (can be decreased with variable PARA
 - CWD: [/github/workspace]
 - Command: [cspell --show-context --show-suggestions --no-must-find-files .github/codecov.yml .github/renovate.json .github/workflows/cd.yaml .github/workflows/copilot-setup-steps.yml .github/workflows/release.yaml .github/workflows/sync-labels.yaml .github/work...(truncated)]
 ::endgroup::
-::group::[32m✅ Linted [YAML] files with [v8r] successfully - (8.56s)[0m (expand for details)
+::group::[32m✅ Linted [YAML] files with [v8r] successfully - (7.76s)[0m (expand for details)
 - Using [v8r v6.0.0] https://megalinter.io/9.4.0/descriptors/yaml_v8r
 - MegaLinter key: [YAML_V8R]
 - Rules config: identified by [v8r]
@@ -165,36 +165,35 @@ Processing linters on [4] parallel cores… (can be decreased with variable PARA
 - CWD: [/github/workspace]
 - Command: [v8r --ignore-errors .github/codecov.yml .github/workflows/cd.yaml .github/workflows/copilot-setup-steps.yml .github/workflows/release.yaml .github/workflows/sync-labels.yaml .github/workflows/todos.yaml .golangci.yml .mega-linter.yml .pre-commit-conf...(truncated)]
 ::endgroup::
-::group::[32m✅ Linted [GO] files with [golangci-lint] successfully - (14.68s)[0m (expand for details)
+::group::[32m✅ Linted [GO] files with [golangci-lint] successfully - (14.63s)[0m (expand for details)
 - Using [golangci-lint v2.10.1] https://megalinter.io/9.4.0/descriptors/go_golangci_lint
 - MegaLinter key: [GO_GOLANGCI_LINT]
 - Rules config: [/github/workspace/.golangci.yml]
 - CWD: [/github/workspace]
 - Command: [golangci-lint run --fix -c /github/workspace/.golangci.yml]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [trivy-sbom] successfully - (0.26s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [trivy-sbom] successfully - (0.31s)[0m (expand for details)
 - Using [trivy-sbom v0.69.1] https://megalinter.io/9.4.0/descriptors/repository_trivy_sbom
 - MegaLinter key: [REPOSITORY_TRIVY_SBOM]
 - Rules config: identified by [trivy-sbom]
 - CWD: [/github/workspace]
 - Command: [trivy fs --format cyclonedx .]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [trufflehog] successfully - (3.85s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [trivy] successfully - (9.15s)[0m (expand for details)
+- Using [trivy v0.69.1] https://megalinter.io/9.4.0/descriptors/repository_trivy
+- MegaLinter key: [REPOSITORY_TRIVY]
+- Rules config: identified by [trivy]
+- CWD: [/github/workspace]
+- Command: [trivy fs --scanners vuln,misconfig --exit-code 1 .]
+::endgroup::
+::group::[32m✅ Linted [REPOSITORY] files with [trufflehog] successfully - (3.81s)[0m (expand for details)
 - Using [trufflehog v3.93.6] https://megalinter.io/9.4.0/descriptors/repository_trufflehog
 - MegaLinter key: [REPOSITORY_TRUFFLEHOG]
 - Rules config: identified by [trufflehog]
 - CWD: [/github/workspace]
 - Command: [trufflehog filesystem . --fail --only-verified --no-update --exclude-paths=/action/lib/.automation/.trufflehogignore]
 ::endgroup::
-::group::[32m✅ Linted [SPELL] files with [lychee] successfully - (0.91s)[0m (expand for details)
-- Using [lychee v0.18.0] https://megalinter.io/9.4.0/descriptors/spell_lychee
-- MegaLinter key: [SPELL_LYCHEE]
-- Rules config: identified by [lychee]
-- Number of files analyzed: [12]
-- CWD: [/github/workspace]
-- Command: [lychee --format detailed --no-progress .github/codecov.yml .github/renovate.json .github/workflows/cd.yaml .github/workflows/copilot-setup-steps.yml .github/workflows/release.yaml .github/workflows/sync-labels.yaml .github/workflows/todos.yaml .golan...(truncated)]
-::endgroup::
-::group::[32m✅ Linted [ACTION] files with [actionlint] successfully - (0.06s)[0m (expand for details)
+::group::[32m✅ Linted [ACTION] files with [actionlint] successfully - (0.05s)[0m (expand for details)
 - Using [actionlint v1.7.11] https://megalinter.io/9.4.0/descriptors/action_actionlint
 - MegaLinter key: [ACTION_ACTIONLINT]
 - Rules config: identified by [actionlint]
@@ -202,42 +201,43 @@ Processing linters on [4] parallel cores… (can be decreased with variable PARA
 - CWD: [/github/workspace]
 - Command: [actionlint .github/workflows/cd.yaml .github/workflows/copilot-setup-steps.yml .github/workflows/release.yaml .github/workflows/sync-labels.yaml .github/workflows/todos.yaml]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [gitleaks] successfully - (0.2s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [gitleaks] successfully - (0.11s)[0m (expand for details)
 - Using [gitleaks v8.30.0] https://megalinter.io/9.4.0/descriptors/repository_gitleaks
 - MegaLinter key: [REPOSITORY_GITLEAKS]
 - Rules config: [.gitleaks.toml]
 - CWD: [/github/workspace]
 - Command: [gitleaks detect --redact -c /action/lib/.automation/.gitleaks.toml --verbose --source .]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [trivy] successfully - (11.0s)[0m (expand for details)
-- Using [trivy v0.69.1] https://megalinter.io/9.4.0/descriptors/repository_trivy
-- MegaLinter key: [REPOSITORY_TRIVY]
-- Rules config: identified by [trivy]
+::group::[32m✅ Linted [SPELL] files with [lychee] successfully - (2.81s)[0m (expand for details)
+- Using [lychee v0.18.0] https://megalinter.io/9.4.0/descriptors/spell_lychee
+- MegaLinter key: [SPELL_LYCHEE]
+- Rules config: identified by [lychee]
+- Number of files analyzed: [12]
 - CWD: [/github/workspace]
-- Command: [trivy fs --scanners vuln,misconfig --exit-code 1 .]
+- Command: [lychee --format detailed --no-progress .github/codecov.yml .github/renovate.json .github/workflows/cd.yaml .github/workflows/copilot-setup-steps.yml .github/workflows/release.yaml .github/workflows/sync-labels.yaml .github/workflows/todos.yaml .golan...(truncated)]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [git_diff] successfully - (0.05s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [git_diff] successfully - (0.04s)[0m (expand for details)
 - Using [git_diff v2.52.0] https://megalinter.io/9.4.0/descriptors/repository_git_diff
 - MegaLinter key: [REPOSITORY_GIT_DIFF]
 - Rules config: identified by [git_diff]
 - CWD: [/github/workspace]
 - Command: [git diff --check]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [syft] successfully - (2.83s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [syft] successfully - (2.78s)[0m (expand for details)
 - Using [syft v1.42.1] https://megalinter.io/9.4.0/descriptors/repository_syft
 - MegaLinter key: [REPOSITORY_SYFT]
 - Rules config: identified by [syft]
 - CWD: [/github/workspace]
 - Command: [syft scan .]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [checkov] successfully - (19.0s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [checkov] successfully - (19.78s)[0m (expand for details)
 - Using [checkov v3.2.506] https://megalinter.io/9.4.0/descriptors/repository_checkov
 - MegaLinter key: [REPOSITORY_CHECKOV]
 - Rules config: [.checkov.yml]
 - CWD: [/github/workspace]
 - Command: [checkov --directory . --config-file /action/lib/.automation/.checkov.yml]
 ::endgroup::
-::group::[32m✅ Linted [REPOSITORY] files with [grype] successfully - (37.35s)[0m (expand for details)
+::group::[32m✅ Linted [REPOSITORY] files with [grype] successfully - (42.15s)[0m (expand for details)
 - Using [grype v0.109.0] https://megalinter.io/9.4.0/descriptors/repository_grype
 - MegaLinter key: [REPOSITORY_GRYPE]
 - Rules config: [.grype.yaml]
