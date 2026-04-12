@@ -2,10 +2,10 @@
     "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
     "bomFormat": "CycloneDX",
     "specVersion": "1.6",
-    "serialNumber": "urn:uuid:11e7ff96-555a-4f21-9478-266c4e0a3dd8",
+    "serialNumber": "urn:uuid:5a044b83-5f19-47f0-97a7-d9e1c190866c",
     "version": 1,
     "metadata": {
-        "timestamp": "2026-04-12T13:15:46+00:00",
+        "timestamp": "2026-04-12T13:22:15+00:00",
         "tools": {
             "components": [
                 {
@@ -20,7 +20,7 @@
             ]
         },
         "component": {
-            "bom-ref": "f70394ea-5399-44e6-b05e-339b0e18102c",
+            "bom-ref": "d0180f33-8db7-4191-8f53-8d8eadff82ba",
             "type": "application",
             "name": ".",
             "properties": [
@@ -33,7 +33,7 @@
     },
     "components": [
         {
-            "bom-ref": "97593e93-39bf-4635-a881-d48aa9cfcbc4",
+            "bom-ref": "c81573f1-fda0-4515-a1ca-ee6c681391f8",
             "type": "application",
             "name": "go.mod",
             "properties": [
@@ -66,15 +66,15 @@
     ],
     "dependencies": [
         {
-            "ref": "97593e93-39bf-4635-a881-d48aa9cfcbc4",
+            "ref": "c81573f1-fda0-4515-a1ca-ee6c681391f8",
             "dependsOn": [
                 "pkg:golang/github.com/devantler-tech/go-template"
             ]
         },
         {
-            "ref": "f70394ea-5399-44e6-b05e-339b0e18102c",
+            "ref": "d0180f33-8db7-4191-8f53-8d8eadff82ba",
             "dependsOn": [
-                "97593e93-39bf-4635-a881-d48aa9cfcbc4"
+                "c81573f1-fda0-4515-a1ca-ee6c681391f8"
             ]
         },
         {
