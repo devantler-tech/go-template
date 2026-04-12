@@ -4,6 +4,7 @@ FLAVOR_SUGGESTIONS: false
 FILTER_REGEX_EXCLUDE: megalinter-reports/.*
 IGNORE_GITIGNORED_FILES: true
 EXCLUDED_DIRECTORIES:
+  - .git
   - megalinter-reports
   - report
   - .github/prompts
