@@ -15,3 +15,9 @@ DISABLE_LINTERS:
   - SPELL_CSPELL
 
 MARKDOWN_MARKDOWNLINT_FILTER_REGEX_EXCLUDE: .github/prompts
+
+# Allow zizmor to use GITHUB_TOKEN so its online audits (e.g. artipacked) can reach the
+# GitHub API. Without this, megalinter strips GITHUB_TOKEN and zizmor aborts with
+# "fatal: no audit was performed", failing the whole megalinter run.
+ACTION_ZIZMOR_UNSECURED_ENV_VARIABLES:
+  - GITHUB_TOKEN
