@@ -1,3 +1,3 @@
 module github.com/devantler-tech/go-template
 
-go 1.24.13
+go 1.25.10
