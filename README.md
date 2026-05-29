@@ -9,10 +9,10 @@ A minimal, batteries-included Go template for new projects. Skip the boilerplate
 ## ✨ What's included
 
 - **Idiomatic scaffold** — a no-op `main.go` plus the conventional `cmd/`, `internal/`, and `pkg/` layout, ready for your first package.
-- **Linting & formatting** — [`golangci-lint`](https://golangci-lint.run/) v2 (formatters + `default: all` linters) and [MegaLinter](https://megalinter.io/) for everything else, runnable locally via [pre-commit](https://pre-commit.com/).
+- **Linting & formatting** — [`golangci-lint`](https://golangci-lint.run/) v2 (formatters + `default: all` linters) in CI, with [MegaLinter](https://megalinter.io/) covering everything else. A [pre-commit](https://pre-commit.com/) hook runs `golangci-lint` formatting (and `mockery` mock generation) locally on commit.
 - **CI/CD** — a required-checks workflow on pull requests and the merge queue, plus a [GoReleaser](https://goreleaser.com/) release pipeline (`cd.yaml`) triggered on `v*` tags.
 - **Coverage** — `go test` coverage reported via [GitHub Code Quality](https://docs.github.com/code-security/code-quality).
-- **Dependency management** — [Renovate](https://docs.renovatebot.com/) keeps Go modules and pinned actions current.
+- **Dependency management** — [Dependabot](https://docs.github.com/code-security/dependabot) keeps Go modules and pinned GitHub Actions current (daily).
 - **Agent-ready** — [`AGENTS.md`](AGENTS.md) conventions and a `.claude/skills/maintain` card so the autonomous Daily AI Assistant (and any agentic tool) can maintain the repo.
 
 The minimum Go version is declared in [`go.mod`](go.mod) — the single source of truth.
