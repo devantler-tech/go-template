@@ -4,29 +4,38 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/devantler-tech/go-template)](https://goreportcard.com/report/github.com/devantler-tech/go-template)
 [![Go Reference](https://pkg.go.dev/badge/github.com/devantler-tech/go-template.svg)](https://pkg.go.dev/github.com/devantler-tech/go-template)
 
-A simple Go template for new projects.
+A minimal, batteries-included Go template for new projects. Skip the boilerplate — start from a clean, idiomatic scaffold with linting, CI/CD, releases, and agent tooling already wired up.
 
-## Prerequisites
+## ✨ What's included
 
-- [Go](https://golang.org/dl/)
+- **Idiomatic scaffold** — a no-op `main.go` plus the conventional `cmd/`, `internal/`, and `pkg/` layout, ready for your first package.
+- **Linting & formatting** — [`golangci-lint`](https://golangci-lint.run/) v2 (formatters + `default: all` linters) in CI, with [MegaLinter](https://megalinter.io/) covering everything else. A [pre-commit](https://pre-commit.com/) hook runs `golangci-lint` formatting (and `mockery` mock generation) locally on commit.
+- **CI/CD** — a required-checks workflow on pull requests and the merge queue, plus a [GoReleaser](https://goreleaser.com/) release pipeline (`cd.yaml`) triggered on `v*` tags.
+- **Coverage** — `go test` coverage reported via [GitHub Code Quality](https://docs.github.com/code-security/code-quality).
+- **Dependency management** — [Dependabot](https://docs.github.com/code-security/dependabot) keeps Go modules and pinned GitHub Actions current (daily).
+- **Agent-ready** — [`AGENTS.md`](AGENTS.md) conventions and a `.claude/skills/maintain` card so the autonomous Daily AI Assistant (and any agentic tool) can maintain the repo.
 
-## 🚀 Getting Started
+The minimum Go version is declared in [`go.mod`](go.mod) — the single source of truth.
 
-Clone the repository and initialize a new module to try the template locally.
+## 🚀 Use this template
+
+Create a new repository from the template with the GitHub CLI:
 
 ```bash
-git clone <repo-url>
-cd <repo-folder>
-go mod init <module-path>
+gh repo create my-project --template devantler-tech/go-template --public --clone
+cd my-project
+```
+
+Or click **Use this template** on the [repository page](https://github.com/devantler-tech/go-template).
+
+Then point the module at your own path:
+
+```bash
+go mod edit -module github.com/<you>/my-project
+go mod tidy
 ```
 
 ## 📝 Usage
-
-### Initialize the module
-
-```bash
-go mod tidy
-```
 
 ### Add a dependency
 
@@ -51,3 +60,7 @@ go run ./<project>
 ```bash
 go test ./...
 ```
+
+## 🤖 Maintenance
+
+This template is maintained by an autonomous AI assistant. The conventions, validation commands, and contribution workflow live in [`AGENTS.md`](AGENTS.md).
