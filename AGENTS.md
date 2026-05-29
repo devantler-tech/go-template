@@ -2,7 +2,7 @@
 
 ## Project overview
 
-`devantler-tech/go-template` is a minimal Go template for bootstrapping new Go projects. It ships an empty, idiomatic scaffold (a no-op `main.go` entry point) plus the house tooling — linting, CI/CD, releases, and editor/agent configuration — so a new module can start from a clean, current baseline. The module path is `github.com/devantler-tech/go-template` and it targets Go 1.24 (CI/release runners use the latest 1.25.x toolchain).
+`devantler-tech/go-template` is a minimal Go template for bootstrapping new Go projects. It ships an empty, idiomatic scaffold (a no-op `main.go` entry point) plus the house tooling — linting, CI/CD, releases, and editor/agent configuration — so a new module can start from a clean, current baseline. The module path is `github.com/devantler-tech/go-template`; the minimum Go version is whatever `go.mod` declares — the single source of truth, so it never drifts from this prose. That floor currently sits on the 1.25.x toolchain (raised from 1.24 because the reusable Dead Code Analysis check installs `deadcode`, which requires Go ≥ 1.25); the requirement is tooling-driven, not a language-feature need.
 
 ## Repository structure
 

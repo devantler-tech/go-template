@@ -12,6 +12,7 @@
     "golines",
     "goreleaser",
     "gostd",
+    "megalinter",
     "swaggo",
     "testutils",
     "vektra"
