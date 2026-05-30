@@ -8,7 +8,7 @@ A minimal, batteries-included Go template for new projects. Skip the boilerplate
 
 ## ✨ What's included
 
-- **Idiomatic scaffold** — a no-op `main.go` plus the conventional `cmd/`, `internal/`, and `pkg/` layout, ready for your first package.
+- **Idiomatic scaffold** — a no-op `main.go` plus the conventional `cmd/`, `internal/`, and `pkg/` layout, ready for your first package. A minimal [`pkg/example`](pkg/example) package with a table-driven test shows the house testing pattern — replace it with your own.
 - **Linting & formatting** — [`golangci-lint`](https://golangci-lint.run/) v2 (formatters + `default: all` linters) in CI, with [MegaLinter](https://megalinter.io/) covering everything else. A [pre-commit](https://pre-commit.com/) hook runs `golangci-lint` formatting (and `mockery` mock generation) locally on commit.
 - **CI/CD** — a required-checks workflow on pull requests and the merge queue, plus a [GoReleaser](https://goreleaser.com/) release pipeline (`cd.yaml`) triggered on `v*` tags.
 - **Coverage** — `go test` coverage reported via [GitHub Code Quality](https://docs.github.com/code-security/code-quality).
