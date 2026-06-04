@@ -8,6 +8,9 @@ updates:
     cooldown:
       default-days: 7
       semver-major-days: 14
+      # devantler-tech Go modules are our own code — bump now, no cooldown.
+      exclude:
+        - "github.com/devantler-tech/*"
 
   - package-ecosystem: github-actions
     directory: /
@@ -15,3 +18,6 @@ updates:
       interval: daily
     cooldown:
       default-days: 7
+      # devantler-tech actions/workflows are our own code — bump now, no cooldown.
+      exclude:
+        - "devantler-tech/*"
