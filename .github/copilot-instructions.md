@@ -10,8 +10,10 @@ in sync; if a PR changes a convention here, it updates `AGENTS.md` too.
 - This is a **template, not a product** — flag any PR that adds application
   features, business logic, or non-scaffold dependencies. The bias is minimal,
   idiomatic, current.
-- `main.go` is intentionally a no-op; `cmd/`, `internal/`, `pkg/` are empty with
-  `.gitkeep` placeholders. Don't approve filler code added to them.
+- `main.go` is intentionally a no-op; `cmd/` and `internal/` are empty `.gitkeep`
+  placeholders, and `pkg/` ships one intentional sample package (`pkg/example/`, a
+  real tested unit meant to be deleted/replaced). Don't approve filler code added
+  beyond that.
 
 ## Go & toolchain
 - `go.mod` is the **single source of truth** for the Go version — flag any
