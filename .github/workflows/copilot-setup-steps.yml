@@ -44,7 +44,10 @@ jobs:
           node-version: "22"
 
       - name: Install golangci-lint
-        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b "$HOME/go/bin" latest
+        # Pin both the installer ref and the version to the tag used in .pre-commit-config.yaml so the
+        # Copilot toolchain lints with the same golangci-lint as local/CI, and never resolves to an
+        # unpinned `latest` whose tarball checksum can break the install (e.g. the v2.12.2 mismatch).
+        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/v2.5.0/install.sh | sh -s -- -b "$HOME/go/bin" v2.5.0
 
       - name: Install mega-linter-runner
         run: npm install mega-linter-runner -g
