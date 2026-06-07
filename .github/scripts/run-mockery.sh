@@ -10,15 +10,15 @@ set -euo pipefail
 
 # Nothing to generate until a mockery config exists.
 if [[ ! -f .mockery.yml && ! -f .mockery.yaml ]]; then
-  exit 0
+	exit 0
 fi
 
 # mockery is installed via `go install github.com/vektra/mockery/v3@v3.5.4`
 # (see .github/workflows/copilot-setup-steps.yml).
 if ! command -v mockery >/dev/null 2>&1; then
-  echo "error: mockery not found on PATH." >&2
-  echo "Install it with: go install github.com/vektra/mockery/v3@v3.5.4" >&2
-  exit 1
+	echo "error: mockery not found on PATH." >&2
+	echo "Install it with: go install github.com/vektra/mockery/v3@v3.5.4" >&2
+	exit 1
 fi
 
 exec mockery
