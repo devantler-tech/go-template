@@ -52,7 +52,7 @@ go build ./...
 ### Run your project
 
 ```bash
-go run ./<project>
+go run .
 ```
 
 ### Test your project
