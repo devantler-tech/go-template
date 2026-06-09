@@ -22,35 +22,35 @@ repo_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
 new_module="${1:-}"
 if [ -z "$new_module" ]; then
-  remote="$(git -C "$repo_root" remote get-url origin 2>/dev/null || true)"
-  case "$remote" in
-    *github.com[:/]*)
-      path="${remote#*github.com}"   # strip up to and incl. github.com
-      path="${path#:}"               # scp-style  git@github.com:owner/repo
-      path="${path#/}"               # https      .../owner/repo
-      path="${path%.git}"
-      [ -n "$path" ] && new_module="github.com/$path"
-      ;;
-  esac
+	remote="$(git -C "$repo_root" remote get-url origin 2>/dev/null || true)"
+	case "$remote" in
+	*github.com[:/]*)
+		path="${remote#*github.com}" # strip up to and incl. github.com
+		path="${path#:}"             # scp-style  git@github.com:owner/repo
+		path="${path#/}"             # https      .../owner/repo
+		path="${path%.git}"
+		[ -n "$path" ] && new_module="github.com/$path"
+		;;
+	esac
 fi
 
 if [ -z "$new_module" ]; then
-  echo "usage: scripts/rename-placeholders.sh <module-path>" >&2
-  echo "       e.g. scripts/rename-placeholders.sh github.com/acme/widget" >&2
-  echo "       (could not derive it from origin's GitHub remote)." >&2
-  exit 1
+	echo "usage: scripts/rename-placeholders.sh <module-path>" >&2
+	echo "       e.g. scripts/rename-placeholders.sh github.com/acme/widget" >&2
+	echo "       (could not derive it from origin's GitHub remote)." >&2
+	exit 1
 fi
 
 if [ "$new_module" = "$OLD_MODULE" ]; then
-  echo "error: the new module path equals the template's own ($OLD_MODULE)." >&2
-  echo "       run this in a project created from the template, with your own path." >&2
-  exit 1
+	echo "error: the new module path equals the template's own ($OLD_MODULE)." >&2
+	echo "       run this in a project created from the template, with your own path." >&2
+	exit 1
 fi
 
 # A Go module path is host(/segment)+ — reject anything that obviously is not one.
 if ! printf '%s' "$new_module" | grep -Eq '^[A-Za-z0-9._~-]+(/[A-Za-z0-9._~-]+)+$'; then
-  echo "error: '$new_module' does not look like a module path (host/owner/name)." >&2
-  exit 1
+	echo "error: '$new_module' does not look like a module path (host/owner/name)." >&2
+	exit 1
 fi
 
 changed=0
@@ -62,26 +62,32 @@ code_files="$(git -C "$repo_root" grep -lF "$OLD_MODULE" -- '*.go' 'go.mod' 2>/d
 readme_files="$(git -C "$repo_root" grep -lF "$OLD_MODULE" -- 'README.md' 2>/dev/null || true)"
 
 for f in $code_files; do
-  abs="$repo_root/$f"
-  tmp="$abs.rename.$$"
-  sed "s|$OLD_MODULE|$new_module|g" "$abs" > "$tmp"
-  if cmp -s "$abs" "$tmp"; then rm -f "$tmp"; else mv "$tmp" "$abs"; changed=$((changed + 1)); fi
+	abs="$repo_root/$f"
+	tmp="$abs.rename.$$"
+	sed "s|$OLD_MODULE|$new_module|g" "$abs" >"$tmp"
+	if cmp -s "$abs" "$tmp"; then rm -f "$tmp"; else
+		mv "$tmp" "$abs"
+		changed=$((changed + 1))
+	fi
 done
 
 for f in $readme_files; do
-  abs="$repo_root/$f"
-  tmp="$abs.rename.$$"
-  # One address per service — BSD sed (macOS) has no GNU `\|` alternation.
-  sed \
-    -e "/goreportcard\.com/ s|$OLD_MODULE|$new_module|g" \
-    -e "/pkg\.go\.dev/ s|$OLD_MODULE|$new_module|g" \
-    "$abs" > "$tmp"
-  if cmp -s "$abs" "$tmp"; then rm -f "$tmp"; else mv "$tmp" "$abs"; changed=$((changed + 1)); fi
+	abs="$repo_root/$f"
+	tmp="$abs.rename.$$"
+	# One address per service — BSD sed (macOS) has no GNU `\|` alternation.
+	sed \
+		-e "/goreportcard\.com/ s|$OLD_MODULE|$new_module|g" \
+		-e "/pkg\.go\.dev/ s|$OLD_MODULE|$new_module|g" \
+		"$abs" >"$tmp"
+	if cmp -s "$abs" "$tmp"; then rm -f "$tmp"; else
+		mv "$tmp" "$abs"
+		changed=$((changed + 1))
+	fi
 done
 
 # Normalise go.mod/go.sum if the Go toolchain is available (no-op for a pure rename).
 if command -v go >/dev/null 2>&1; then
-  ( cd "$repo_root" && go mod tidy )
+	(cd "$repo_root" && go mod tidy)
 fi
 
 echo "renamed $OLD_MODULE -> $new_module across $changed file(s)."
