@@ -24,7 +24,7 @@ need.
 
 ## Validation
 
-Recommended local validation before opening a PR (CI runs only a required-checks aggregator and the release pipeline runs GoReleaser, so neither executes these commands — run them locally):
+Run these locally before opening a PR:
 
 ```bash
 golangci-lint fmt        # apply configured formatters (gci, gofmt, gofumpt, goimports, golines, swaggo)
@@ -34,6 +34,16 @@ golangci-lint run        # run the configured linters
 ```
 
 Workflow YAML changes should pass `actionlint`.
+
+These local checks are for fast feedback — **CI does verify the scaffold.** A
+**repository ruleset** ("Require workflows to pass before merging for Go")
+injects the shared `devantler-tech/reusable-workflows` **`validate-go-project`**
+workflow on every PR and the merge queue; it runs `go build`, `go test`,
+`golangci-lint`, dead-code analysis, MegaLinter, and Code-Quality coverage
+(change-detection skips the Go jobs on non-Go PRs). The repo's own `ci.yaml` is
+a separate, trivially-passing `CI - Required Checks` aggregator — **not** the Go
+gate — so do **not** wire `validate-go-project` into `ci.yaml`; that would
+double-run every job (see go-template#76, closed as invalid).
 
 ## Maintenance (autonomous AI assistant)
 
@@ -54,7 +64,7 @@ Assistant`. This section adds go-template-specifics. As a project template, the
 bias is to keep the scaffold **minimal, idiomatic, and current** — don't add
 product features.
 
-**Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run` — recommended local checks; CI itself only runs a required-checks aggregator, so run these yourself before opening a PR. Workflows → `actionlint`.
+**Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run` — local checks for fast feedback (the ruleset-injected `validate-go-project` workflow re-runs build/test/lint/coverage on the PR — see *Validation* above; don't duplicate it into `ci.yaml`). Workflows → `actionlint`.
 
 **Task menu** (light; ≤1 high-value item per run):
 
