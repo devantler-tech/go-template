@@ -21,6 +21,7 @@ need.
 - `.golangci.yml` — golangci-lint v2 config (formatters + `default: all` linters, with a few opt-outs and mock-file exclusions).
 - `.github/workflows/` — `ci.yaml` (required-checks aggregation on PRs/merge queue), `cd.yaml` (GoReleaser release on `v*` tags), `release.yaml`, `sync-labels.yaml`, `todos.yaml`, and `copilot-setup-steps.yml`.
 - `.pre-commit-config.yaml`, `.mega-linter.yml`, `cspell.json` — local linting/spell-checking configuration.
+- `scripts/rename-placeholders.sh` — one-shot onboarding: repoints the module path (`go.mod`, Go imports, README badges) to a new project's path, leaving the upstream **Use this template** links intact.
 
 ## Validation
 
