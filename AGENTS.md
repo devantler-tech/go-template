@@ -65,6 +65,18 @@ Assistant`. This section adds go-template-specifics. As a project template, the
 bias is to keep the scaffold **minimal, idiomatic, and current** — don't add
 product features.
 
+**Toolchain-floor policy.** The Go floor in `go.mod` is the **single source of
+truth** and is **tooling-driven**: it equals the **highest minimum the house
+tooling requires** — today Go 1.25, because the shared `validate-go-project`
+Dead Code Analysis step installs `deadcode` (needs Go ≥ 1.25) — *not* "latest
+Go" and *not* a language-feature choice. Bump it **only** when a shared-tooling
+requirement forces it (or a security / end-of-life reason), never
+speculatively, and **record the trigger in the PR body**. Don't over-raise:
+keeping the floor at the minimum the tooling needs keeps generated projects as
+broadly compatible as possible. Nothing else hard-codes the version — `copilot-setup-steps.yml` reads
+`go-version-file: go.mod` and the README points at `go.mod` — so keep it that
+way (no second copy to drift).
+
 **Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run` — local checks for fast feedback (the ruleset-injected `validate-go-project` workflow re-runs build/test/lint/coverage on the PR — see *Validation* above; don't duplicate it into `ci.yaml`). Workflows → `actionlint`.
 
 **Task menu** (light; ≤1 high-value item per run):
@@ -73,4 +85,5 @@ product features.
 - **Dependency/toolchain hygiene:** curate Dependabot/Renovate PRs; keep the toolchain version (Go) and pinned action versions current and aligned with the house workflows; flag majors.
 - **CI/workflow health:** keep CI green and tidy (pin/align actions, fix broken/flaky steps, remove dead workflows); red on `main` is top priority.
 - **Scaffold freshness:** the generated project builds & tests on the current toolchain; README/badges accurate; example code idiomatic and minimal.
+- **Toolchain-floor freshness:** on any toolchain/tooling bump, re-confirm the `go.mod` Go floor is still *exactly* the minimum the house tooling needs — don't over-raise — and that nothing has introduced a hard-coded Go version that could drift from it (see the *Toolchain-floor policy* above).
 - **Maintain your own PRs:** fix CI you caused, resolve conflicts.
