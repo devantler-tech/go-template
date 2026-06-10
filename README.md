@@ -28,12 +28,17 @@ cd my-project
 
 Or click **Use this template** on the [repository page](https://github.com/devantler-tech/go-template).
 
-Then point the module at your own path:
+Then personalise the scaffold — repoint the module path (in `go.mod`, the Go
+imports, and the README badges) in one shot:
 
 ```bash
-go mod edit -module github.com/<you>/my-project
-go mod tidy
+scripts/rename-placeholders.sh github.com/<you>/my-project
 ```
+
+Run with no argument to derive the path from your `origin` GitHub remote. The
+script leaves the upstream **Use this template** links above untouched, runs
+`go mod tidy`, and you can review the result with `git diff`. (Prefer to do it
+by hand? `go mod edit -module github.com/<you>/my-project && go mod tidy`.)
 
 ## 📝 Usage
 
