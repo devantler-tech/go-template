@@ -19,9 +19,10 @@ need.
 - `cmd/`, `internal/`, `pkg/` — conventional Go layout, each kept with a `.gitkeep` placeholder for new code.
 - `go.mod` / `go.sum` — module definition and checksums.
 - `.golangci.yml` — golangci-lint v2 config (formatters + `default: all` linters, with a few opt-outs and mock-file exclusions).
-- `.github/workflows/` — `ci.yaml` (required-checks aggregation on PRs/merge queue), `cd.yaml` (GoReleaser release on `v*` tags), `release.yaml`, `sync-labels.yaml`, `todos.yaml`, and `copilot-setup-steps.yml`.
+- `.github/workflows/` — `ci.yaml` (required-checks aggregation on PRs/merge queue), `cd.yaml` (GoReleaser release on `v*` tags), `validate-scaffold.yaml` (template-repo-only gate that exercises the onboarding script — no-ops downstream), `release.yaml`, `sync-labels.yaml`, `todos.yaml`, and `copilot-setup-steps.yml`.
 - `.pre-commit-config.yaml`, `.mega-linter.yml`, `cspell.json` — local linting/spell-checking configuration.
 - `scripts/rename-placeholders.sh` — one-shot onboarding: repoints the module path (`go.mod`, Go imports, README badges) to a new project's path, leaving the upstream **Use this template** links intact.
+- `scripts/rename-placeholders.test.sh` — end-to-end test for the onboarding script: runs it against a throwaway copy, then asserts the module repoint, the badge rewrite, the upstream-link preservation, no stray temp files, and that the renamed scaffold builds/tests. Run with `sh scripts/rename-placeholders.test.sh`; CI runs it via `validate-scaffold.yaml`.
 
 ## Validation
 
@@ -45,6 +46,13 @@ workflow on every PR and the merge queue; it runs `go build`, `go test`,
 a separate, trivially-passing `CI - Required Checks` aggregator — **not** the Go
 gate — so do **not** wire `validate-go-project` into `ci.yaml`; that would
 double-run every job (see go-template#76, closed as invalid).
+
+The **onboarding script** (`scripts/rename-placeholders.sh`) sits outside that Go
+gate — it is shell, run once before any Go change — so it has its own template-
+repo-only check, `validate-scaffold.yaml`, which runs
+`scripts/rename-placeholders.test.sh`. Run that test locally (`sh
+scripts/rename-placeholders.test.sh`) when touching either script; it no-ops in
+generated projects (the `github.repository` guard).
 
 ## Maintenance (autonomous AI assistant)
 
