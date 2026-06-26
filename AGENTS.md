@@ -20,7 +20,9 @@ need.
 - `go.mod` / `go.sum` — module definition and checksums.
 - `.golangci.yml` — golangci-lint v2 config (formatters + `default: all` linters, with a few opt-outs and mock-file exclusions).
 - `.github/workflows/` — `ci.yaml` (required-checks aggregation on PRs/merge queue), `cd.yaml` (GoReleaser release on `v*` tags), `validate-scaffold.yaml` (template-repo-only gate that exercises the onboarding script — no-ops downstream), `release.yaml`, `sync-labels.yaml`, `todos.yaml`, and `copilot-setup-steps.yml`.
-- `.pre-commit-config.yaml`, `.mega-linter.yml`, `cspell.json` — local linting/spell-checking configuration.
+- `.pre-commit-config.yaml` — local pre-commit hooks: `golangci-lint-fmt` (Go formatting) and mock generation (`mockery`, via `.github/scripts/run-mockery.sh`).
+- `.github/scripts/run-mockery.sh` — the pre-commit mockery hook's entry point; a guarded no-op until the project adds a `.mockery.yml`/`.mockery.yaml`, then runs `mockery` (so a fresh clone's hook stays green while the generation step is already wired).
+- `.mega-linter.yml`, `cspell.json` — local linting/spell-checking configuration.
 - `scripts/rename-placeholders.sh` — one-shot onboarding: repoints the module path (`go.mod`, Go imports, README badges) to a new project's path, leaving the upstream **Use this template** links intact.
 - `scripts/rename-placeholders.test.sh` — end-to-end test for the onboarding script: runs it against a throwaway copy, then asserts the module repoint, the badge rewrite, the upstream-link preservation, no stray temp files, and that the renamed scaffold builds/tests. Run with `sh scripts/rename-placeholders.test.sh`; CI runs it via `validate-scaffold.yaml`.
 
