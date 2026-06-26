@@ -19,9 +19,10 @@ need.
 - `cmd/`, `internal/`, `pkg/` — conventional Go layout, each kept with a `.gitkeep` placeholder for new code.
 - `go.mod` / `go.sum` — module definition and checksums.
 - `.golangci.yml` — golangci-lint v2 config (formatters + `default: all` linters, with a few opt-outs and mock-file exclusions).
-- `.github/workflows/` — `ci.yaml` (required-checks aggregation on PRs/merge queue), `cd.yaml` (GoReleaser release on `v*` tags), `validate-scaffold.yaml` (template-repo-only gate that exercises the onboarding script — no-ops downstream), `release.yaml`, `sync-labels.yaml`, `todos.yaml`, and `copilot-setup-steps.yml`.
+- `.github/workflows/` — `ci.yaml` (required-checks aggregation on PRs/merge queue), `cd.yaml` (GoReleaser release on `v*` tags), `validate-scaffold.yaml` (template-repo-only gate that exercises the onboarding script and the pre-commit mockery hook — no-ops downstream), `release.yaml`, `sync-labels.yaml`, `todos.yaml`, and `copilot-setup-steps.yml`.
 - `.pre-commit-config.yaml` — local pre-commit hooks: `golangci-lint-fmt` (Go formatting) and mock generation (`mockery`, via `.github/scripts/run-mockery.sh`).
 - `.github/scripts/run-mockery.sh` — the pre-commit mockery hook's entry point; a guarded no-op until the project adds a `.mockery.yml`/`.mockery.yaml`, then runs `mockery` (so a fresh clone's hook stays green while the generation step is already wired).
+- `.github/scripts/run-mockery.test.sh` — hermetic test for the mockery hook: runs `run-mockery.sh` under a stripped PATH and asserts the three branches (silent no-op without a config, exit 1 + install hint when mockery is absent, exec when present). Run with `sh .github/scripts/run-mockery.test.sh`; CI runs it via `validate-scaffold.yaml`.
 - `.mega-linter.yml`, `cspell.json` — local linting/spell-checking configuration.
 - `scripts/rename-placeholders.sh` — one-shot onboarding: repoints the module path (`go.mod`, Go imports, README badges) to a new project's path, leaving the upstream **Use this template** links intact.
 - `scripts/rename-placeholders.test.sh` — end-to-end test for the onboarding script: runs it against a throwaway copy, then asserts the module repoint, the badge rewrite, the upstream-link preservation, no stray temp files, and that the renamed scaffold builds/tests. Run with `sh scripts/rename-placeholders.test.sh`; CI runs it via `validate-scaffold.yaml`.
@@ -49,12 +50,14 @@ a separate, trivially-passing `CI - Required Checks` aggregator — **not** the 
 gate — so do **not** wire `validate-go-project` into `ci.yaml`; that would
 double-run every job (see go-template#76, closed as invalid).
 
-The **onboarding script** (`scripts/rename-placeholders.sh`) sits outside that Go
-gate — it is shell, run once before any Go change — so it has its own template-
-repo-only check, `validate-scaffold.yaml`, which runs
-`scripts/rename-placeholders.test.sh`. Run that test locally (`sh
-scripts/rename-placeholders.test.sh`) when touching either script; it no-ops in
-generated projects (the `github.repository` guard).
+The scaffold's **shell helpers** sit outside that Go gate — they are shell, not
+Go — so they have their own template-repo-only check, `validate-scaffold.yaml`,
+which runs both `scripts/rename-placeholders.test.sh` (the onboarding script,
+run once before any Go change) and `.github/scripts/run-mockery.test.sh` (the
+pre-commit mockery hook). Run the matching test locally (`sh
+scripts/rename-placeholders.test.sh` / `sh .github/scripts/run-mockery.test.sh`)
+when touching either script; the gate no-ops in generated projects (the
+`github.repository` guard).
 
 ## Maintenance (autonomous AI assistant)
 
