@@ -6,14 +6,17 @@ on:
 
 permissions: {}
 
-# Template-repo-only scaffold-integrity gate. scripts/rename-placeholders.sh is
-# the first thing a newcomer runs after `Use this template`; a silent regression
-# in it would ship broken to every project created from this template, and it has
-# no other coverage. This job runs ONLY in the template repo; it no-ops in
-# projects created from it (the guard below is false there), mirroring how
-# cd.yaml/release.yaml run only downstream. Generated projects delete the
-# onboarding script and validate their own code via the injected
-# validate-go-project workflow.
+# Template-repo-only scaffold-integrity gate for the scaffold's two shell
+# helpers, neither of which the Go gate covers:
+#   * scripts/rename-placeholders.sh — the first thing a newcomer runs after
+#     `Use this template`; a silent regression ships broken to every generated
+#     project.
+#   * .github/scripts/run-mockery.sh — the pre-commit `mockery` hook's entry
+#     point; a regression makes every fresh clone's first commit fail.
+# This job runs ONLY in the template repo; it no-ops in projects created from it
+# (the guard below is false there), mirroring how cd.yaml/release.yaml run only
+# downstream. Generated projects delete the onboarding script and validate their
+# own code via the injected validate-go-project workflow.
 jobs:
   validate-scaffold:
     name: Validate Scaffold
@@ -36,3 +39,5 @@ jobs:
           go-version-file: go.mod
       - name: 🧱 Validate onboarding (rename-placeholders.sh)
         run: sh scripts/rename-placeholders.test.sh
+      - name: 🧪 Validate pre-commit mockery hook (run-mockery.sh)
+        run: sh .github/scripts/run-mockery.test.sh
