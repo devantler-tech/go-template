@@ -33,7 +33,7 @@ fail() {
 # script's `git rev-parse` / `git grep` / `git ls-files` see exactly the
 # template's files in isolation. Everything below runs inside this copy.
 work="$(mktemp -d)"
-trap 'rm -rf "$work"' EXIT
+trap 'rm -rf "$work" "${work2:-}" "${work3:-}"' EXIT
 cp -R "$repo_root"/. "$work"/
 rm -rf "$work/.git"
 cd "$work"
@@ -90,4 +90,47 @@ fi
 go build ./...
 go test ./...
 
-echo "PASS: rename-placeholders.sh end-to-end (guardrails + module repoint + upstream-link preservation + build/test)"
+# --- No-argument default: derive the module path from origin's GitHub remote ---
+# "With no argument it derives the path from origin's GitHub remote" — the URL
+# parsing (strip up to github.com, the scp `:` vs https `/`, drop the `.git`
+# suffix) is the script's documented default, yet every case above passes an
+# EXPLICIT path, leaving this branch unexercised. Each sub-case uses a fresh copy
+# (the one above is already renamed), gives it an origin, runs the script with no
+# argument, and asserts the same derived module path — both URL forms must agree.
+make_copy() {
+	d="$(mktemp -d)"
+	cp -R "$repo_root"/. "$d"/
+	rm -rf "$d/.git"
+	(
+		cd "$d"
+		git init -q
+		git add .
+		git -c user.email=test@example.com -c user.name=test commit -qm init
+	)
+	printf '%s' "$d"
+}
+
+# https remote: github.com/<owner>/<repo>, with the .git suffix dropped.
+work2="$(make_copy)"
+(
+	cd "$work2"
+	git remote add origin "https://github.com/example-owner/renamed-project.git"
+	./scripts/rename-placeholders.sh # no argument -> derive from origin
+	grep -q "^module ${NEW_MODULE}\$" go.mod ||
+		fail "no-arg run did not derive ${NEW_MODULE} from the https remote"
+	if git grep -qF "$OLD_MODULE" -- 'go.mod' '*.go'; then
+		fail "template module path still present after the derived (https) rename"
+	fi
+)
+
+# scp-style remote (git@github.com:owner/repo.git) derives identically.
+work3="$(make_copy)"
+(
+	cd "$work3"
+	git remote add origin "git@github.com:example-owner/renamed-project.git"
+	./scripts/rename-placeholders.sh # no argument -> derive from origin
+	grep -q "^module ${NEW_MODULE}\$" go.mod ||
+		fail "no-arg run did not derive ${NEW_MODULE} from the scp-style remote"
+)
+
+echo "PASS: rename-placeholders.sh end-to-end (guardrails + module repoint + no-arg remote derivation + upstream-link preservation + build/test)"
