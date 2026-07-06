@@ -104,6 +104,14 @@ Delete `pkg/featureflag` (like `pkg/example`) when you add your own. The SDK is
 the one allowance in `.golangci.yml`'s `depguard` strict allow-list; keep the
 rest of the non-test scaffold stdlib-only.
 
+**Services vs CLIs — reach for the SDK only when you need it.** The OpenFeature
+SDK is for **services** that need runtime evaluation (targeting, gradual
+rollout, a remote backend). A generated **CLI** should stay dependency-free:
+gate an experimental command/flag behind cobra's `Hidden: true` (off `--help`)
+plus an `--experimental` opt-in (or a config gate), and only add the SDK where
+richer evaluation is genuinely needed. Same default-off, remove-after-rollout
+lifecycle either way.
+
 **Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run` — local checks for fast feedback (the ruleset-injected `validate-go-project` workflow re-runs build/test/lint/coverage on the PR — see *Validation* above; don't duplicate it into `ci.yaml`). Workflows → `actionlint`.
 
 **Task menu** (light; ≤1 high-value item per run):
