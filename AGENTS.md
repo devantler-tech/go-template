@@ -90,6 +90,20 @@ broadly compatible as possible. Nothing else hard-codes the version — `copilot
 `go-version-file: go.mod` and the README points at `go.mod` — so keep it that
 way (no second copy to drift).
 
+**Feature-flag-first delivery.** Generated services land every new feature
+**behind a flag, default-off**, and flip it on only after validation — the
+portfolio-wide convention (devantler-tech/monorepo#2059). The scaffold wires the
+portable **OpenFeature Go SDK** in `pkg/featureflag`: `NewProvider` (in-memory,
+so the example evaluates with no backend — swap for **flagd** or a managed
+backend in a real service), `NewClient`, and `Enabled` (default-off on any error
+or missing flag). Guard the new path behind `Enabled`, keep the old path as the
+default, and **cover both states** with a table-driven test. **Lifecycle is
+mandatory:** short-lived *release* flags are **removed after rollout** (flag debt
+is the #1 failure mode); long-lived *ops/permission* flags are the exception.
+Delete `pkg/featureflag` (like `pkg/example`) when you add your own. The SDK is
+the one allowance in `.golangci.yml`'s `depguard` strict allow-list; keep the
+rest of the non-test scaffold stdlib-only.
+
 **Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run` — local checks for fast feedback (the ruleset-injected `validate-go-project` workflow re-runs build/test/lint/coverage on the PR — see *Validation* above; don't duplicate it into `ci.yaml`). Workflows → `actionlint`.
 
 **Task menu** (light; ≤1 high-value item per run):
