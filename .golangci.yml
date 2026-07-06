@@ -35,3 +35,7 @@ linters:
           list-mode: strict
           allow:
             - $gostd
+            # Portable runtime flag API — the feature-flag-first delivery
+            # convention (see AGENTS.md ## Maintenance). Swap the provider for
+            # flagd / a managed backend in a real service; call sites are stdlib.
+            - github.com/open-feature/go-sdk
