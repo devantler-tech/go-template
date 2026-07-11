@@ -11,18 +11,23 @@ on:
     paths:
       - .github/workflows/copilot-setup-steps.yml
 
-# Set restrictive top-level permissions to satisfy security requirements
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
   copilot-setup-steps:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # checkout
 
     # You can define any steps you want, and they will run before the agent starts.
     # If you do not check out your code, Copilot will do this for you.
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
       - name: Checkout code
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -50,7 +55,9 @@ jobs:
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/v2.5.0/install.sh | sh -s -- -b "$HOME/go/bin" v2.5.0
 
       - name: Install mega-linter-runner
-        run: npm install mega-linter-runner -g
+        # Copilot needs the CLI globally. Pin the direct package while accepting that npm still
+        # resolves its transitive ranges; a lockfile solely for this helper would bloat the template.
+        run: npm install mega-linter-runner@9.6.0 -g # zizmor: ignore[adhoc-packages]
 
       - name: Install Go dependencies
         run: go mod download
