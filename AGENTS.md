@@ -19,7 +19,7 @@ need.
 - `cmd/`, `internal/`, `pkg/` — conventional Go layout, each kept with a `.gitkeep` placeholder for new code.
 - `go.mod` / `go.sum` — module definition and checksums.
 - `.golangci.yml` — golangci-lint v2 config (formatters + `default: all` linters, with a few opt-outs and mock-file exclusions).
-- `.github/workflows/` — `ci.yaml` (required-checks aggregation on PRs/merge queue), `cd.yaml` (GoReleaser release on `v*` tags), `validate-scaffold.yaml` (template-repo-only gate that exercises the onboarding script and the pre-commit mockery hook — no-ops downstream), `release.yaml`, `sync-labels.yaml`, `todos.yaml`, and `copilot-setup-steps.yml`.
+- `.github/workflows/` — `ci.yaml` (required-checks aggregation on PRs/merge queue), `cd.yaml` (GoReleaser release on `v*` tags), `validate-scaffold.yaml` (template-repo-only gate that exercises the onboarding script and the pre-commit mockery hook — no-ops downstream), `release.yaml`, `todos.yaml`, and `copilot-setup-steps.yml`.
 - `.pre-commit-config.yaml` — local pre-commit hooks: `golangci-lint-fmt` (Go formatting) and mock generation (`mockery`, via `.github/scripts/run-mockery.sh`).
 - `.github/scripts/run-mockery.sh` — the pre-commit mockery hook's entry point; a guarded no-op until the project adds a `.mockery.yml`/`.mockery.yaml`, then runs `mockery` (so a fresh clone's hook stays green while the generation step is already wired).
 - `.github/scripts/run-mockery.test.sh` — hermetic test for the mockery hook: runs `run-mockery.sh` under a stripped PATH and asserts the three branches (silent no-op without a config, exit 1 + install hint when mockery is absent, exec when present). Run with `sh .github/scripts/run-mockery.test.sh`; CI runs it via `validate-scaffold.yaml`.
