@@ -6,13 +6,15 @@ on:
 
 permissions: {}
 
-# Template-repo-only scaffold-integrity gate for the scaffold's two shell
-# helpers, neither of which the Go gate covers:
+# Template-repo-only scaffold-integrity gate for three non-Go surfaces that
+# the shared Go gate does not cover:
 #   * scripts/rename-placeholders.sh — the first thing a newcomer runs after
 #     `Use this template`; a silent regression ships broken to every generated
 #     project.
 #   * .github/scripts/run-mockery.sh — the pre-commit `mockery` hook's entry
 #     point; a regression makes every fresh clone's first commit fail.
+#   * CLAUDE.md / GEMINI.md — exact one-line includes of canonical AGENTS.md;
+#     copied guidance would create a second source that silently drifts.
 # This job runs ONLY in the template repo; it no-ops in projects created from it
 # (the guard below is false there), mirroring how cd.yaml/release.yaml run only
 # downstream. Generated projects delete the onboarding script and validate their
@@ -33,6 +35,8 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false # read-only job; never pushes
+      - name: 🤖 Validate agent instruction shims
+        run: sh scripts/validate-agent-shims.test.sh
       - name: 🐹 Set up Go
         uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         with:
