@@ -14,6 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ✅ Require checks in PR
-        uses: devantler-tech/actions/aggregate-job-checks@8835de82ebb5450c332e963bd9ffb4a6286bdd29 # v9.0.6
+        uses: devantler-tech/actions/aggregate-job-checks@931b82faa0c30e65f626527a6b3c8cd2d4879c71 # v9.0.11
         with:
           job-results: ""
