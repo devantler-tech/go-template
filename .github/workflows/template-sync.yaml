@@ -1,0 +1,33 @@
+name: 🔄 Template Sync
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # weekly, Monday 06:00 UTC
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  template-sync:
+    # Skipped in the template repo itself (it is the sync source); runs in every
+    # instance created from this template, where it opens a PR with template
+    # changes. Outside devantler-tech the org-provided APP_PRIVATE_KEY secret is
+    # absent and the scheduled run would only fail — so personal-account
+    # instances are off by default and opt in by adding the secret plus a
+    # repository variable TEMPLATE_SYNC_ENABLED=true.
+    if: >-
+      github.repository != 'devantler-tech/go-template' &&
+      (github.repository_owner == 'devantler-tech' || vars.TEMPLATE_SYNC_ENABLED == 'true')
+    # The reusable workflow's job opens the sync PR, so the caller must grant it
+    # write to contents + pull-requests. A reusable workflow cannot be granted
+    # more than the caller, and the top-level `permissions: {}` grants none, so
+    # without this the run fails at startup (reusable-workflow permission check)
+    # — both here and in every instance where the job actually runs.
+    permissions:
+      contents: write
+      pull-requests: write
+    uses: devantler-tech/actions/.github/workflows/template-sync.yaml@0f27c13a9785608e0bbf9998777d27761b4de617 # v10.0.2
+    with:
+      source-repo-path: devantler-tech/go-template
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
