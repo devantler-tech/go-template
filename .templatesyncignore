@@ -25,23 +25,28 @@ LICENSE
 .github/CODEOWNERS
 .claude/skills/maintain/SKILL.md
 
-# --- Release / dependency / lint-dictionary config the instance tailors ---
+# --- Release / dependency / lint config the instance tailors ---
+# .golangci.yml is instance-owned on purpose: its depguard rule is a strict
+# allowlist (stdlib + OpenFeature), so any real project must extend it — a
+# synced overwrite would clobber the project's dependency allowlist.
 .releaserc
 .gitignore
 .github/dependabot.yaml
+.golangci.yml
 cspell.json
 
 # --- The instance's own Go module and code ---
-# The module path, entrypoint, and example packages are repointed by
+# The module path, entrypoint, and packages are repointed by
 # scripts/rename-placeholders.sh at scaffold time and evolve with the instance;
-# a sync must never clobber them.
+# a sync must never clobber them. pkg/ is ignored WHOLESALE (not just the
+# starter packages) so a template file added later at a path the instance
+# already uses can never touch instance code.
 go.mod
 go.sum
 main.go
 cmd/
 internal/
-pkg/example/
-pkg/featureflag/
+pkg/
 
 # --- Scaffolding machinery (template-only; dead code in a live instance) ---
 # These run when a NEW repo is created from this template ("use this template"
