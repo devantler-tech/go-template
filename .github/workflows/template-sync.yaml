@@ -11,10 +11,13 @@ jobs:
   template-sync:
     # Skipped in the template repo itself (it is the sync source); runs in every
     # instance created from this template, where it opens a PR with template
-    # changes. Outside devantler-tech the org-provided APP_PRIVATE_KEY secret is
+    # changes. Outside devantler-tech the org-provided App credentials are
     # absent and the scheduled run would only fail — so personal-account
-    # instances are off by default and opt in by adding the secret plus a
-    # repository variable TEMPLATE_SYNC_ENABLED=true.
+    # instances are off by default and opt in by supplying their OWN GitHub App
+    # (one that can open PRs): the APP_PRIVATE_KEY secret plus the APP_CLIENT_ID
+    # repository variable (the reusable workflow mints its token from that
+    # variable/secret pair), and setting the repository variable
+    # TEMPLATE_SYNC_ENABLED=true.
     if: >-
       github.repository != 'devantler-tech/go-template' &&
       (github.repository_owner == 'devantler-tech' || vars.TEMPLATE_SYNC_ENABLED == 'true')
