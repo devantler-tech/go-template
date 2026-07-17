@@ -15,9 +15,13 @@
 # the shared lint configs (.mega-linter.yml, .pre-commit-config.yaml,
 # .editorconfig, .gitattributes — NOT .golangci.yml, which instances own; see
 # below), the mockery pre-commit hook scripts, and the
-# CLAUDE.md/GEMINI.md shims. (ci.yaml is deliberately template-owned here —
-# unlike the stack-neutral gitops-tenant-template, every Go instance shares the
-# same required-checks aggregation, so CI fixes must propagate.)
+# CLAUDE.md/GEMINI.md shims. (ci.yaml is deliberately template-owned for
+# devantler-tech instances — they all share the same ruleset-injected
+# build/test workflows and this required-checks aggregation, so CI fixes must
+# propagate. An instance OUTSIDE devantler-tech does not inherit those org
+# rulesets and must replace ci.yaml with real build/test jobs — after doing
+# so, add `.github/workflows/ci.yaml` to this file, which the instance owns,
+# so a later sync cannot revert it.)
 
 # --- Identity & docs (instance-specific) ---
 AGENTS.md

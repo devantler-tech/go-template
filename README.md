@@ -64,10 +64,16 @@ file falls into one of three ownership classes:
   by sync afterwards, so you can delete them and they stay gone.
 
 The sync workflow no-ops in this template repository itself. In devantler-tech
-instances it works out of the box (the org provides the `APP_PRIVATE_KEY`
-secret); an instance elsewhere is off by default — opt in by adding an
-`APP_PRIVATE_KEY` secret (a GitHub App key that can open PRs) and setting the
-repository variable `TEMPLATE_SYNC_ENABLED=true`.
+instances it works out of the box (the org provides the App credentials); an
+instance elsewhere is off by default — opt in by supplying your own GitHub App
+(one allowed to open PRs in your repository): add its private key as the
+`APP_PRIVATE_KEY` secret, its client ID as the `APP_CLIENT_ID` repository
+variable (the reusable workflow mints its token from that variable/secret
+pair), and set the repository variable `TEMPLATE_SYNC_ENABLED=true`. Note that
+outside devantler-tech the synced `ci.yaml` is only an empty required-check
+aggregator (the real build/test workflows are injected by devantler-tech org
+rulesets): replace it with your own CI and add `.github/workflows/ci.yaml` to
+your `.templatesyncignore` so later syncs preserve your version.
 
 ## 📝 Usage
 
