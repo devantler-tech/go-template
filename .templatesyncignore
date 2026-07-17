@@ -1,0 +1,56 @@
+# .templatesyncignore — files an INSTANCE created from this template OWNS.
+#
+# Same syntax as .gitignore. The weekly template-sync workflow
+# (devantler-tech/actions .github/workflows/template-sync.yaml, using
+# AndreasAugustin/actions-template-sync) is skipped in this template repo itself
+# and runs in every instance created from it — opening a PR that brings template
+# changes downstream. It only ever touches files that exist in this template, and
+# it SKIPS anything matched here, so an instance's tailored files are never
+# clobbered by an upstream sync.
+#
+# Everything NOT listed here is TEMPLATE-OWNED shared plumbing kept current in
+# every instance by template-sync — change it upstream in
+# devantler-tech/go-template, never by editing it in an instance. Template-owned
+# plumbing includes .github/workflows/{ci,cd,release,template-sync,todos}.yaml,
+# the lint configs (.golangci.yml, .mega-linter.yml, .pre-commit-config.yaml,
+# .editorconfig, .gitattributes), the mockery pre-commit hook scripts, and the
+# CLAUDE.md/GEMINI.md shims. (ci.yaml is deliberately template-owned here —
+# unlike the stack-neutral gitops-tenant-template, every Go instance shares the
+# same required-checks aggregation, so CI fixes must propagate.)
+
+# --- Identity & docs (instance-specific) ---
+AGENTS.md
+README.md
+LICENSE
+.github/CODEOWNERS
+.claude/skills/maintain/SKILL.md
+
+# --- Release / dependency / lint-dictionary config the instance tailors ---
+.releaserc
+.gitignore
+.github/dependabot.yaml
+cspell.json
+
+# --- The instance's own Go module and code ---
+# The module path, entrypoint, and example packages are repointed by
+# scripts/rename-placeholders.sh at scaffold time and evolve with the instance;
+# a sync must never clobber them.
+go.mod
+go.sum
+main.go
+cmd/
+internal/
+pkg/example/
+pkg/featureflag/
+
+# --- Scaffolding machinery (template-only; dead code in a live instance) ---
+# These run when a NEW repo is created from this template ("use this template"
+# copies everything, so scaffolding still arrives at creation time). A
+# scaffolded instance never runs them again — ignoring them stops template-sync
+# (re-)introducing them downstream, so an instance that deletes them stays clean.
+scripts/rename-placeholders.sh
+scripts/rename-placeholders.test.sh
+.github/workflows/validate-scaffold.yaml
+
+# --- This ignore-list itself (the instance curates its own ownership) ---
+.templatesyncignore

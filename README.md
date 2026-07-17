@@ -41,6 +41,31 @@ script leaves the upstream **Use this template** links above untouched, runs
 `go mod tidy`, and you can review the result with `git diff`. (Prefer to do it
 by hand? `go mod edit -module github.com/<you>/my-project && go mod tidy`.)
 
+## 🔄 Staying current
+
+A weekly **template-sync** workflow opens a PR in your repository whenever this
+template's shared plumbing changes, so instances never drift from the
+portfolio's CI/lint/agent-file conventions. It never touches your code: every
+file falls into one of three ownership classes:
+
+- **Template-owned plumbing** — synced downstream by the weekly PR: the
+  `.github/workflows/` CI/CD/release workflows, the lint configs
+  (`.golangci.yml`, `.mega-linter.yml`, `.pre-commit-config.yaml`,
+  `.editorconfig`, `.gitattributes`), and the `CLAUDE.md`/`GEMINI.md` shims.
+  Change these upstream in the template, never by hand in an instance.
+- **Instance-owned** — listed in [`.templatesyncignore`](.templatesyncignore),
+  never touched by a sync: your Go module and code (`go.mod`, `go.sum`,
+  `main.go`, `cmd/`, `internal/`, the example packages), identity and docs
+  (`README.md`, `AGENTS.md`, `LICENSE`, `CODEOWNERS`), and the configs you
+  tailor (`.releaserc`, `.gitignore`, `dependabot.yaml`, `cspell.json`).
+- **Scaffold-time-only** — the rename script and the template's own
+  `validate-scaffold.yaml` gate arrive when the repo is created and are ignored
+  by sync afterwards, so you can delete them and they stay gone.
+
+The sync workflow no-ops in this template repository itself and needs the
+org-provided `APP_PRIVATE_KEY` secret in instances (present by default on
+devantler-tech repositories).
+
 ## 📝 Usage
 
 ### Add a dependency
