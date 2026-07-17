@@ -43,18 +43,24 @@ golangci-lint run        # run the configured linters
 
 Workflow YAML changes should pass `actionlint`.
 
-These local checks are for fast feedback — **CI does verify the scaffold.** A
-**repository ruleset** ("Require workflows to pass before merging for Go")
-injects the shared `devantler-tech/reusable-workflows` **`validate-go-project`**
-workflow on every PR and the merge queue; it runs `go build`, `go test`,
-`golangci-lint`, dead-code analysis, MegaLinter, and Code-Quality coverage
-(change-detection skips the Go jobs on non-Go PRs). The repo's own `ci.yaml` is
-a separate, trivially-passing `CI - Required Checks` aggregator — **not** the Go
-gate — so do **not** wire `validate-go-project` into `ci.yaml`; that would
-double-run every job (see go-template#76, closed as invalid).
+These local checks are for **fast feedback** and are the primary Go
+verification for the template repository itself: CI here does **not** run `go
+build` / `go test` / `golangci-lint` on the template's own scaffold. What CI
+gates on every PR and the merge queue is `CI - Required Checks` (a trivial
+aggregator defined in the repo's own `ci.yaml`), `Validate Scaffold` (the
+scaffold-integrity checks below), and the org-wide security/automation
+rulesets — CodeQL (`Analyze (go)` / `Analyze (actions)`), Scan for Workflow
+Vulnerabilities (`zizmor`), and Dependency Review. Required status checks come
+from the org "Require status checks to pass" ruleset (context: `CI - Required
+Checks`); there is **no** "…for Go" workflow ruleset and **no**
+`validate-go-project` / `reusable-workflows` injection (that repo was archived
+into `devantler-tech/actions`). Keep `ci.yaml` the trivial aggregator it is — do
+**not** add heavy Go build/test/lint jobs to it (see go-template#76, closed as
+invalid); the full Go gate runs in **generated** projects via their own
+scaffolded CI, not in this template.
 
-The scaffold's **non-Go integrity checks** sit outside that Go gate, so they
-have their own template-repo-only workflow, `validate-scaffold.yaml`. It runs
+The scaffold's **non-Go integrity checks** are the template-repo-specific gate,
+run by their own template-repo-only workflow, `validate-scaffold.yaml`. It runs
 `sh scripts/validate-agent-shims.test.sh`,
 `sh scripts/rename-placeholders.test.sh`, and
 `sh .github/scripts/run-mockery.test.sh`. Run the matching check locally when
@@ -114,7 +120,7 @@ plus an `--experimental` opt-in (or a config gate), and only add the SDK where
 richer evaluation is genuinely needed. Same default-off, remove-after-rollout
 lifecycle either way.
 
-**Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run` — local checks for fast feedback (the ruleset-injected `validate-go-project` workflow re-runs build/test/lint/coverage on the PR — see *Validation* above; don't duplicate it into `ci.yaml`). Workflows → `actionlint`.
+**Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run` — local checks for fast feedback and the primary Go verification for the template itself; CI here does **not** re-run build/test/lint on the scaffold (see *Validation* above), so don't add heavy Go jobs to `ci.yaml`. Workflows → `actionlint`.
 
 **Task menu** (light; ≤1 high-value item per run):
 
