@@ -12,8 +12,9 @@
 # every instance by template-sync — change it upstream in
 # devantler-tech/go-template, never by editing it in an instance. Template-owned
 # plumbing includes .github/workflows/{ci,cd,release,template-sync,todos}.yaml,
-# the lint configs (.golangci.yml, .mega-linter.yml, .pre-commit-config.yaml,
-# .editorconfig, .gitattributes), the mockery pre-commit hook scripts, and the
+# the shared lint configs (.mega-linter.yml, .pre-commit-config.yaml,
+# .editorconfig, .gitattributes — NOT .golangci.yml, which instances own; see
+# below), the mockery pre-commit hook scripts, and the
 # CLAUDE.md/GEMINI.md shims. (ci.yaml is deliberately template-owned here —
 # unlike the stack-neutral gitops-tenant-template, every Go instance shares the
 # same required-checks aggregation, so CI fixes must propagate.)
