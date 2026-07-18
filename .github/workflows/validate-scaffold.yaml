@@ -6,8 +6,7 @@ on:
 
 permissions: {}
 
-# Template-repo-only scaffold-integrity gate for three non-Go surfaces that
-# the shared Go gate does not cover:
+# Template-repo-only scaffold-integrity gate for three non-Go surfaces:
 #   * scripts/rename-placeholders.sh — the first thing a newcomer runs after
 #     `Use this template`; a silent regression ships broken to every generated
 #     project.
@@ -17,8 +16,9 @@ permissions: {}
 #     copied guidance would create a second source that silently drifts.
 # This job runs ONLY in the template repo; it no-ops in projects created from it
 # (the guard below is false there), mirroring how cd.yaml/release.yaml run only
-# downstream. Generated projects delete the onboarding script and validate their
-# own code via the injected validate-go-project workflow.
+# downstream. Generated projects delete the onboarding script and gate their own
+# code through whatever Go workflow their organisation injects (see AGENTS.md
+# *Validation*) — this repo has no such injection.
 jobs:
   validate-scaffold:
     name: Validate Scaffold
