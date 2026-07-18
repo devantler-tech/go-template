@@ -51,12 +51,14 @@ build/test/lint gate**. It is not absent, though — the `Validate Scaffold` job
 that stops building or testing fails a PR; there is just no dedicated
 `golangci-lint` / dead-code / MegaLinter / coverage gate on this repo. A **PR**
 is gated by `Validate Scaffold`, `CI - Required Checks` (a trivial aggregator in
-the repo's own `ci.yaml`), and the org-wide rulesets — CodeQL (`Analyze (go)` /
-`Analyze (actions)`), Scan for Workflow Vulnerabilities (`zizmor`), and
-Dependency Review. The **merge queue** runs only `ci.yaml` (it declares
-`merge_group`; `validate-scaffold.yaml` is `pull_request`-only), so `CI -
-Required Checks` is the merge-group gate and `Validate Scaffold` does not run
-there. Required status checks come from the org "Require status checks to pass"
+the repo's own `ci.yaml`), and the org-required workflows — CodeQL (`Analyze
+(go)` / `Analyze (actions)`), Scan for Workflow Vulnerabilities (`zizmor`),
+Dependency Review, and Enable Auto-Merge (`eligibility`). The **merge queue**
+runs `ci.yaml` **plus** those org-required workflows — they all declare
+`merge_group` and complete via no-op eligibility paths, so they appear in the
+merge-group check set too. Only `validate-scaffold.yaml` is
+`pull_request`-only, so `Validate Scaffold` does **not** run on a merge-group
+SHA. Required status checks come from the org "Require status checks to pass"
 ruleset (context: `CI - Required Checks`); there is **no** "…for Go" workflow
 ruleset and **no** `validate-go-project` / `reusable-workflows` injection on this
 repo (that repo was archived into `devantler-tech/actions`). Keep `ci.yaml` the
