@@ -37,6 +37,8 @@ jobs:
           persist-credentials: false # read-only job; never pushes
       - name: 🤖 Validate agent instruction shims
         run: sh scripts/validate-agent-shims.test.sh
+      - name: Check Go language-version floor
+        run: sh scripts/go-floor.test.sh
       - name: 🐹 Set up Go
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:

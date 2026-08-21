@@ -29,6 +29,7 @@ need.
 - `scripts/rename-placeholders.sh` — one-shot onboarding: repoints the module path (`go.mod`, Go imports, README badges) to a new project's path, leaving the upstream **Use this template** links intact.
 - `scripts/rename-placeholders.test.sh` — end-to-end test for the onboarding script: runs it against a throwaway copy, then asserts the module repoint, the badge rewrite, the upstream-link preservation, no stray temp files, and that the renamed scaffold builds/tests. Run with `sh scripts/rename-placeholders.test.sh`; CI runs it via `validate-scaffold.yaml`.
 - `scripts/validate-agent-shims.test.sh` — hermetic structural check that both tool-specific shims contain exactly `@AGENTS.md` plus one newline. Run with `sh scripts/validate-agent-shims.test.sh`; CI runs it via `validate-scaffold.yaml`.
+- `scripts/go-floor.test.sh` — hermetic ratchet that `go.mod`'s `go` directive stays at or above `1.25.13` (the lowest 1.25 patch that clears the 1.25.12 stdlib advisories). Run with `sh scripts/go-floor.test.sh`; CI runs it via `validate-scaffold.yaml`.
 
 ## Validation
 
@@ -109,6 +110,16 @@ keeping the floor at the minimum the tooling needs keeps generated projects as
 broadly compatible as possible. Nothing else hard-codes the version — `copilot-setup-steps.yml` reads
 `go-version-file: go.mod` and the README points at `go.mod` — so keep it that
 way (no second copy to drift).
+
+**One deliberate exception to that rule:** `scripts/go-floor.test.sh` hard-codes
+the floor in `floor_major` / `floor_minor` / `floor_patch`. A ratchet that read
+its bound from the very file it checks could never fail, so the second copy is
+what gives it any force at all. It is a **lower bound, not a second pin** —
+`go.mod` may sit above it — so an ordinary tooling-driven bump needs no change
+here. Raise it only when a bump is a **security floor that must never be
+reverted**, and when you do, update `go.mod`, those three variables, and the
+script's description in the file list above **in the same change**, or the
+ratchet starts asserting a floor nothing else agrees with.
 
 **Feature-flag-first delivery.** Generated services land every new feature
 **behind a flag, default-off**, and flip it on only after validation — the
