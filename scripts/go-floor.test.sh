@@ -8,7 +8,7 @@ root=$(git rev-parse --show-toplevel)
 mod="${root}/go.mod"
 floor_major=1
 floor_minor=25
-floor_patch=15
+floor_patch=13
 
 if [ ! -f "$mod" ]; then
   echo "FAIL: go.mod missing" >&2

@@ -29,7 +29,7 @@ need.
 - `scripts/rename-placeholders.sh` — one-shot onboarding: repoints the module path (`go.mod`, Go imports, README badges) to a new project's path, leaving the upstream **Use this template** links intact.
 - `scripts/rename-placeholders.test.sh` — end-to-end test for the onboarding script: runs it against a throwaway copy, then asserts the module repoint, the badge rewrite, the upstream-link preservation, no stray temp files, and that the renamed scaffold builds/tests. Run with `sh scripts/rename-placeholders.test.sh`; CI runs it via `validate-scaffold.yaml`.
 - `scripts/validate-agent-shims.test.sh` — hermetic structural check that both tool-specific shims contain exactly `@AGENTS.md` plus one newline. Run with `sh scripts/validate-agent-shims.test.sh`; CI runs it via `validate-scaffold.yaml`.
-- `scripts/go-floor.test.sh` — hermetic ratchet that `go.mod`'s `go` directive stays at or above `1.25.15` (the patch that independently clears the 1.25.12 stdlib advisories). Run with `sh scripts/go-floor.test.sh`; CI runs it via `validate-scaffold.yaml`.
+- `scripts/go-floor.test.sh` — hermetic ratchet that `go.mod`'s `go` directive stays at or above `1.25.13` (the lowest 1.25 patch that clears the 1.25.12 stdlib advisories). Run with `sh scripts/go-floor.test.sh`; CI runs it via `validate-scaffold.yaml`.
 
 ## Validation
 
