@@ -60,6 +60,7 @@ pkg/
 # (re-)introducing them downstream, so an instance that deletes them stays clean.
 scripts/rename-placeholders.sh
 scripts/rename-placeholders.test.sh
+scripts/go-floor.test.sh
 .github/workflows/validate-scaffold.yaml
 
 # --- This ignore-list itself (the instance curates its own ownership) ---
