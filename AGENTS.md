@@ -111,6 +111,16 @@ broadly compatible as possible. Nothing else hard-codes the version — `copilot
 `go-version-file: go.mod` and the README points at `go.mod` — so keep it that
 way (no second copy to drift).
 
+**One deliberate exception to that rule:** `scripts/go-floor.test.sh` hard-codes
+the floor in `floor_major` / `floor_minor` / `floor_patch`. A ratchet that read
+its bound from the very file it checks could never fail, so the second copy is
+what gives it any force at all. It is a **lower bound, not a second pin** —
+`go.mod` may sit above it — so an ordinary tooling-driven bump needs no change
+here. Raise it only when a bump is a **security floor that must never be
+reverted**, and when you do, update `go.mod`, those three variables, and the
+script's description in the file list above **in the same change**, or the
+ratchet starts asserting a floor nothing else agrees with.
+
 **Feature-flag-first delivery.** Generated services land every new feature
 **behind a flag, default-off**, and flip it on only after validation — the
 portfolio-wide convention (devantler-tech/monorepo#2059). The scaffold wires the

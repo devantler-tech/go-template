@@ -18,13 +18,26 @@ fi
 go_line=$(awk '
   /^[[:space:]]*\/\// { next }
   /^[[:space:]]*go[[:space:]]+/ {
-    print $2
+    sub(/^[[:space:]]*go[[:space:]]+/, "")
+    sub(/[[:space:]]*\/\/.*$/, "")
+    sub(/[[:space:]]+$/, "")
+    print
     exit
   }
 ' "$mod")
 
 if [ -z "$go_line" ]; then
   echo "FAIL: no go directive in go.mod" >&2
+  exit 1
+fi
+
+# Validate the WHOLE directive, not just its first field. Taking `$2` accepted
+# `go 1.25.13 extra` and `go 1.25.13.99` alike, because the trailing token and
+# the fourth component were simply never looked at -- so a malformed directive
+# could satisfy a security ratchet that had not actually parsed it. A trailing
+# `//` comment is stripped above and stays allowed.
+if ! printf '%s\n' "$go_line" | grep -qE '^[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
+  echo "FAIL: go.mod go directive is not a bare version: '${go_line}'" >&2
   exit 1
 fi
 
