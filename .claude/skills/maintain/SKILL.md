@@ -5,4 +5,4 @@ description: Repository maintenance for devantler-tech/go-template — triage, d
 
 # maintain
 
-Perform maintenance per the **## Maintenance** section of this repo's [`AGENTS.md`](../../../AGENTS.md), within the shared devantler-tech maintenance conventions it references. Highest-value tasks only; a draft PR is the checkpoint; never merge external PRs or self-merge your own unreviewed drafts.
+Perform maintenance per the **## Maintenance** section of this repo's [`AGENTS.md`](../../../AGENTS.md), within the shared devantler-tech maintenance conventions it references. Highest-value tasks only; work in draft PRs, self-promote only on the readiness conditions that section names, and never run an external contributor's branch locally.
