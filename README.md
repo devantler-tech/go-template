@@ -27,7 +27,8 @@ repositories and usable anywhere.
 - **Releases from your commit messages** — write
   [Conventional Commits](https://www.conventionalcommits.org/), and merging a `feat:` or `fix:` to
   `main` tags the next version. The tag makes [GoReleaser](https://goreleaser.com/) build your
-  binaries and attach them to a GitHub release.
+  binaries and attach them to a GitHub release. Outside devantler-tech, tagging needs the GitHub
+  App set up under [Staying current](#-staying-current).
 - **CI and dependency updates** — a required-checks workflow gates pull requests and the merge
   queue, and [Dependabot](https://docs.github.com/code-security/dependabot) keeps Go modules and
   pinned GitHub Actions current. In devantler-tech repositories, organisation rules add the Go
@@ -88,11 +89,13 @@ setup, so your project keeps up without copying files by hand. Files fall into t
 - **Used once** — the rename script and the template's own `validate-scaffold.yaml` check. Delete
   them after setup and syncs will not bring them back.
 
-In devantler-tech repositories the sync works out of the box. Elsewhere, take two steps:
+In devantler-tech repositories releases and the sync work out of the box. Elsewhere, take two
+steps:
 
-1. Turn the sync on with a GitHub App that can open pull requests in your repository: add the App's
-   private key as the `APP_PRIVATE_KEY` secret and its client ID as the `APP_CLIENT_ID` variable,
-   then set the variable `TEMPLATE_SYNC_ENABLED=true`.
+1. Install a GitHub App on your repository with write access to contents, issues, pull requests
+   and workflows. Add its private key as the `APP_PRIVATE_KEY` secret and its client ID as the
+   `APP_CLIENT_ID` variable; releases then tag on merge. Set the variable
+   `TEMPLATE_SYNC_ENABLED=true` to turn the sync on too.
 2. Replace `.github/workflows/ci.yaml` with your own build and test jobs — the synced one only
    collects the checks that devantler-tech's organisation rules add — and list it in
    `.templatesyncignore` so syncs keep your version.
