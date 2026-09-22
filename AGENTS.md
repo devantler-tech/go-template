@@ -20,6 +20,7 @@ need.
 - `go.mod` / `go.sum` — module definition and checksums.
 - `AGENTS.md` — the canonical, cross-tool project instructions.
 - `CLAUDE.md` / `GEMINI.md` — exact one-line `@AGENTS.md` shims; never copy guidance into them.
+- `.claude/skills/maintain/SKILL.md` — the maintenance skill card agentic tools load; it defers to *Maintenance* below.
 - `.golangci.yml` — golangci-lint v2 config (formatters + `default: all` linters, with a few opt-outs and mock-file exclusions).
 - `.github/workflows/` — `ci.yaml` (required-checks aggregation on PRs/merge queue), `cd.yaml` (GoReleaser release on `v*` tags), `validate-scaffold.yaml` (template-repo-only gate that exercises the agent shims, onboarding script, and pre-commit mockery hook — no-ops downstream), `template-sync.yaml` (skipped in this repo; in instances it opens a weekly PR syncing template-owned plumbing, honouring `.templatesyncignore` — see the README's *Staying current* ownership classes), `release.yaml`, `todos.yaml`, and `copilot-setup-steps.yml`.
 - `.pre-commit-config.yaml` — local pre-commit hooks: `golangci-lint-fmt` (Go formatting) and mock generation (`mockery`, via `.github/scripts/run-mockery.sh`).

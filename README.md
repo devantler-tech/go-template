@@ -4,103 +4,100 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/devantler-tech/go-template)](https://goreportcard.com/report/github.com/devantler-tech/go-template)
 [![Go Reference](https://pkg.go.dev/badge/github.com/devantler-tech/go-template.svg)](https://pkg.go.dev/github.com/devantler-tech/go-template)
 
-A minimal, batteries-included Go template for new projects. Skip the boilerplate — start from a clean, idiomatic scaffold with linting, CI/CD, releases, and agent tooling already wired up.
+A starting point for new Go projects: an empty, idiomatic Go module with linting, releases, CI and
+instructions for AI coding agents already set up. It is for Go developers who want to write their
+first package on day one instead of assembling tooling first — built for devantler-tech
+repositories and usable anywhere.
 
-## ✨ What's included
+## ✨ What you get
 
-- **Idiomatic scaffold** — a no-op `main.go` plus the conventional `cmd/`, `internal/`, and `pkg/` layout, ready for your first package. A minimal [`pkg/example`](pkg/example) package with a table-driven test shows the house testing pattern — replace it with your own.
-- **Feature-flag-first** — [`pkg/featureflag`](pkg/featureflag) wires the portable [OpenFeature](https://openfeature.dev/) Go SDK so a **service** can land every new feature behind a flag, default-off, and flip it on only after validation (swap the in-memory provider for [flagd](https://flagd.dev/) or a managed backend). A **CLI** can stay dependency-free instead — gate experimental commands behind cobra `Hidden` + an `--experimental` opt-in, reaching for the SDK only when you need richer evaluation. Delete it when you add your own.
-- **Linting & formatting** — ready-to-use [`golangci-lint`](https://golangci-lint.run/) v2 (formatters + `default: all` linters) and [MegaLinter](https://megalinter.io/) configs. A [pre-commit](https://pre-commit.com/) hook runs `golangci-lint` formatting (and `mockery` mock generation) locally on commit; in CI they run wherever your organisation injects a Go workflow (see [*Validation*](AGENTS.md#validation)).
-- **CI/CD** — a required-checks workflow on pull requests and the merge queue, plus a [GoReleaser](https://goreleaser.com/) release pipeline (`cd.yaml`) triggered on `v*` tags.
-- **Coverage** — a `go test` coverage config ready to report via [GitHub Code Quality](https://docs.github.com/code-security/code-quality) once your CI runs it.
-- **Dependency management** — [Dependabot](https://docs.github.com/code-security/dependabot) keeps Go modules and pinned GitHub Actions current (daily).
-- **Agent-ready** — [`AGENTS.md`](AGENTS.md) conventions and a `.claude/skills/maintain` card so the autonomous Daily AI Assistant (and any agentic tool) can maintain the repo.
+- **A module ready for your code** — a no-op `main.go` and the standard `cmd/`, `internal/` and
+  `pkg/` folders. [`pkg/example`](pkg/example) shows the house testing style, a table-driven test;
+  replace it with your first package.
+- **Feature flags built in** — [`pkg/featureflag`](pkg/featureflag) wires the
+  [OpenFeature](https://openfeature.dev/) Go SDK, so a service can ship new behaviour switched off
+  and turn it on once it is proven. Flags live in memory, so it runs with no backend until you swap
+  in [flagd](https://flagd.dev/) or a hosted provider. A CLI can skip the SDK and hide experimental
+  commands behind an `--experimental` opt-in instead. Delete the package once you have your own.
+- **Linting from the first commit** — [golangci-lint](https://golangci-lint.run/) v2 runs a wide
+  set of Go linters and formatters, and [MegaLinter](https://megalinter.io/) checks the YAML,
+  Markdown and workflow files.
+  A [pre-commit](https://pre-commit.com/) hook formats Go code on every commit and generates mocks
+  with [mockery](https://vektra.github.io/mockery/) once you add a `.mockery.yml`.
+- **Releases from your commit messages** — write
+  [Conventional Commits](https://www.conventionalcommits.org/), and merging a `feat:` or `fix:` to
+  `main` tags the next version. The tag makes [GoReleaser](https://goreleaser.com/) build your
+  binaries and attach them to a GitHub release.
+- **CI and dependency updates** — a required-checks workflow gates pull requests and the merge
+  queue, and [Dependabot](https://docs.github.com/code-security/dependabot) keeps Go modules and
+  pinned GitHub Actions current. In devantler-tech repositories, organisation rules add the Go
+  build, test, lint and coverage jobs.
+- **Instructions for AI agents** — [`AGENTS.md`](AGENTS.md) gives coding agents such as Claude,
+  Copilot and Cursor the project's conventions and validation commands.
 
-The minimum Go version is declared in [`go.mod`](go.mod) — the single source of truth.
+The minimum Go version is whatever [`go.mod`](go.mod) declares.
 
-## 🚀 Use this template
+## 🚀 Get started
 
-Create a new repository from the template with the GitHub CLI:
+Create your repository from the template with the [GitHub CLI](https://cli.github.com/), point the
+module at it, and confirm it builds:
 
 ```bash
 gh repo create my-project --template devantler-tech/go-template --public --clone
 cd my-project
+scripts/rename-placeholders.sh
+go build ./... && go test ./...
 ```
 
-Or click **Use this template** on the [repository page](https://github.com/devantler-tech/go-template).
+The rename script replaces the template's module path in `go.mod`, the Go imports and the README
+badges with your repository's path, read from its `origin` remote, then runs `go mod tidy`. Pass a
+path such as `github.com/acme/widget` to choose it yourself, and review the result with `git diff`.
 
-Then personalise the scaffold — repoint the module path (in `go.mod`, the Go
-imports, and the README badges) in one shot:
+Prefer the browser? Click **Use this template** on the
+[repository page](https://github.com/devantler-tech/go-template), clone your new repository, and run
+the last two commands.
 
-```bash
-scripts/rename-placeholders.sh github.com/<you>/my-project
-```
+To format Go code on every commit, install [pre-commit](https://pre-commit.com/) and run
+`pre-commit install` once.
 
-Run with no argument to derive the path from your `origin` GitHub remote. The
-script leaves the upstream **Use this template** links above untouched, runs
-`go mod tidy`, and you can review the result with `git diff`. (Prefer to do it
-by hand? `go mod edit -module github.com/<you>/my-project && go mod tidy`.)
+## 📝 Everyday commands
+
+| Task | Command |
+| --- | --- |
+| Add a dependency | `go get example.com/awesome-lib@latest` |
+| Build | `go build ./...` |
+| Run | `go run .` |
+| Test | `go test ./...` |
+| Lint | `golangci-lint run` |
+
+`.golangci.yml` lets non-test code import only the standard library and OpenFeature, so add each
+new dependency to its `depguard` allowlist.
 
 ## 🔄 Staying current
 
-A weekly **template-sync** workflow opens a PR in your repository whenever this
-template's shared plumbing changes, so instances never drift from the
-portfolio's CI/lint/agent-file conventions. It never touches your code: every
-file falls into one of three ownership classes:
+Every week a template-sync workflow opens a pull request with any changes to this template's shared
+setup, so your project keeps up without copying files by hand. Files fall into three groups:
 
-- **Template-owned plumbing** — synced downstream by the weekly PR: the
-  `.github/workflows/` CI/CD/release workflows, the shared lint configs
-  (`.mega-linter.yml`, `.pre-commit-config.yaml`, `.editorconfig`,
-  `.gitattributes`), and the `CLAUDE.md`/`GEMINI.md` shims.
-  Change these upstream in the template, never by hand in an instance.
-- **Instance-owned** — listed in [`.templatesyncignore`](.templatesyncignore),
-  never touched by a sync: your Go module and code (`go.mod`, `go.sum`,
-  `main.go`, `cmd/`, `internal/`, all of `pkg/`), identity and docs
-  (`README.md`, `AGENTS.md`, `LICENSE`, `CODEOWNERS`), and the configs you
-  tailor (`.releaserc`, `.gitignore`, `dependabot.yaml`, `.golangci.yml` —
-  its depguard allowlist grows with your dependencies — and `cspell.json`).
-- **Scaffold-time-only** — the rename script and the template's own
-  `validate-scaffold.yaml` gate arrive when the repo is created and are ignored
-  by sync afterwards, so you can delete them and they stay gone.
+- **Synced from the template** — the CI, release and sync workflows in `.github/workflows/`, the
+  shared lint configs (`.mega-linter.yml`, `.pre-commit-config.yaml`, `.editorconfig`,
+  `.gitattributes`) and the `CLAUDE.md`/`GEMINI.md` shims. Change these in the template, not in
+  your copy.
+- **Yours** — everything listed in [`.templatesyncignore`](.templatesyncignore), which a sync never
+  touches: your Go module and code, `README.md`, `AGENTS.md`, `LICENSE`, `CODEOWNERS`, and the
+  configs you tailor, such as `.golangci.yml`, `.releaserc`, `dependabot.yaml` and `cspell.json`.
+- **Used once** — the rename script and the template's own `validate-scaffold.yaml` check. Delete
+  them after setup and syncs will not bring them back.
 
-The sync workflow no-ops in this template repository itself. In devantler-tech
-instances it works out of the box (the org provides the App credentials); an
-instance elsewhere is off by default — opt in by supplying your own GitHub App
-(one allowed to open PRs in your repository): add its private key as the
-`APP_PRIVATE_KEY` secret, its client ID as the `APP_CLIENT_ID` repository
-variable (the reusable workflow mints its token from that variable/secret
-pair), and set the repository variable `TEMPLATE_SYNC_ENABLED=true`. Note that
-outside devantler-tech the synced `ci.yaml` is only an empty required-check
-aggregator (the real build/test workflows are injected by devantler-tech org
-rulesets): replace it with your own CI and add `.github/workflows/ci.yaml` to
-your `.templatesyncignore` so later syncs preserve your version.
+In devantler-tech repositories the sync works out of the box. Elsewhere, take two steps:
 
-## 📝 Usage
-
-### Add a dependency
-
-```bash
-go get example.com/awesome-lib@latest
-```
-
-### Build your project
-
-```bash
-go build ./...
-```
-
-### Run your project
-
-```bash
-go run .
-```
-
-### Test your project
-
-```bash
-go test ./...
-```
+1. Turn the sync on with a GitHub App that can open pull requests in your repository: add the App's
+   private key as the `APP_PRIVATE_KEY` secret and its client ID as the `APP_CLIENT_ID` variable,
+   then set the variable `TEMPLATE_SYNC_ENABLED=true`.
+2. Replace `.github/workflows/ci.yaml` with your own build and test jobs — the synced one only
+   collects the checks that devantler-tech's organisation rules add — and list it in
+   `.templatesyncignore` so syncs keep your version.
 
 ## 🤖 Maintenance
 
-This template is maintained by an autonomous AI assistant. The conventions, validation commands, and contribution workflow live in [`AGENTS.md`](AGENTS.md).
+An autonomous AI agent maintains this template. Conventions, validation commands and the
+contribution workflow are in [`AGENTS.md`](AGENTS.md).
