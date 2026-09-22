@@ -11,6 +11,12 @@ EXCLUDED_DIRECTORIES:
   - .jscpd
 
 DISABLE_LINTERS:
+  # MegaLinter's image ships a fixed Go toolchain and runs it with GOTOOLCHAIN=local, so once
+  # go.mod's `go` directive is newer than that toolchain golangci-lint cannot load the module
+  # and fails with a toolchain error instead of lint findings. Nothing is lost: the dedicated
+  # golangci-lint job in devantler-tech/actions' validate-go-project.yaml runs it after
+  # actions/setup-go installs the toolchain go.mod asks for.
+  - GO_GOLANGCI_LINT
   - GO_REVIVE
   - SPELL_CSPELL
 
