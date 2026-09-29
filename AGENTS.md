@@ -63,7 +63,7 @@ merge-group check set too. Only `validate-scaffold.yaml` is
 SHA. Required status checks come from the org "Require status checks to pass"
 ruleset (context: `CI - Required Checks`); there is **no** "…for Go" workflow
 ruleset and **no** `validate-go-project` / `reusable-workflows` injection on this
-repo (that repo was archived into `devantler-tech/actions`). Keep `ci.yaml` the
+repo (that repo was archived; its workflows now live in `devantler-tech/.github`). Keep `ci.yaml` the
 trivial aggregator it is — do **not** add heavy Go build/test/lint jobs to it
 (see go-template#76, closed as invalid).
 
