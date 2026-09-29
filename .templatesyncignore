@@ -1,7 +1,7 @@
 # .templatesyncignore — files an INSTANCE created from this template OWNS.
 #
 # Same syntax as .gitignore. The weekly template-sync workflow
-# (devantler-tech/actions .github/workflows/template-sync.yaml, using
+# (devantler-tech/.github .github/workflows/template-sync.yaml, using
 # AndreasAugustin/actions-template-sync) is skipped in this template repo itself
 # and runs in every instance created from it — opening a PR that brings template
 # changes downstream. It only ever touches files that exist in this template, and

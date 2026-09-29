@@ -26,7 +26,7 @@ need.
 - `.pre-commit-config.yaml` — local pre-commit hooks: `golangci-lint-fmt` (Go formatting) and mock generation (`mockery`, via `.github/scripts/run-mockery.sh`).
 - `.github/scripts/run-mockery.sh` — the pre-commit mockery hook's entry point; a guarded no-op until the project adds a `.mockery.yml`/`.mockery.yaml`, then runs `mockery` (so a fresh clone's hook stays green while the generation step is already wired).
 - `.github/scripts/run-mockery.test.sh` — hermetic test for the mockery hook: runs `run-mockery.sh` under a stripped PATH and asserts the three branches (silent no-op without a config, exit 1 + install hint when mockery is absent, exec when present). Run with `sh .github/scripts/run-mockery.test.sh`; CI runs it via `validate-scaffold.yaml`.
-- `.mega-linter.yml`, `cspell.json` — local linting/spell-checking configuration. MegaLinter leaves Go linting to the dedicated `golangci-lint` job in devantler-tech/actions' `validate-go-project.yaml`, which instances run (this repo has no such gate — see *Validation*): its image ships a fixed Go toolchain (run with `GOTOOLCHAIN=local`) that cannot load a module whose `go` directive is newer, so keep `GO_GOLANGCI_LINT` disabled there.
+- `.mega-linter.yml`, `cspell.json` — local linting/spell-checking configuration. MegaLinter leaves Go linting to the dedicated `golangci-lint` job in devantler-tech/.github's `validate-go-project.yaml`, which instances run (this repo has no such gate — see *Validation*): its image ships a fixed Go toolchain (run with `GOTOOLCHAIN=local`) that cannot load a module whose `go` directive is newer, so keep `GO_GOLANGCI_LINT` disabled there.
 - `scripts/rename-placeholders.sh` — one-shot onboarding: repoints the module path (`go.mod`, Go imports, README badges) to a new project's path, leaving the upstream **Use this template** links intact.
 - `scripts/rename-placeholders.test.sh` — end-to-end test for the onboarding script: runs it against a throwaway copy, then asserts the module repoint, the badge rewrite, the upstream-link preservation, no stray temp files, and that the renamed scaffold builds/tests. Run with `sh scripts/rename-placeholders.test.sh`; CI runs it via `validate-scaffold.yaml`.
 - `scripts/validate-agent-shims.test.sh` — hermetic structural check that both tool-specific shims contain exactly `@AGENTS.md` plus one newline. Run with `sh scripts/validate-agent-shims.test.sh`; CI runs it via `validate-scaffold.yaml`.
@@ -63,7 +63,7 @@ merge-group check set too. Only `validate-scaffold.yaml` is
 SHA. Required status checks come from the org "Require status checks to pass"
 ruleset (context: `CI - Required Checks`); there is **no** "…for Go" workflow
 ruleset and **no** `validate-go-project` / `reusable-workflows` injection on this
-repo (that repo was archived into `devantler-tech/actions`). Keep `ci.yaml` the
+repo (that repo was archived; its workflows now live in `devantler-tech/.github`). Keep `ci.yaml` the
 trivial aggregator it is — do **not** add heavy Go build/test/lint jobs to it
 (see go-template#76, closed as invalid).
 
