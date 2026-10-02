@@ -77,7 +77,10 @@ The scaffold's **non-Go integrity checks** are the template-repo-specific gate,
 run by their own template-repo-only workflow, `validate-scaffold.yaml`. It runs
 `sh scripts/validate-agent-shims.test.sh`,
 `sh scripts/rename-placeholders.test.sh`, and
-`sh .github/scripts/run-mockery.test.sh`. Run the matching check locally when
+`sh .github/scripts/run-mockery.test.sh`, then the shared shell-pipeline validator
+with `enabled: true` for `scripts` and `.github/scripts`. The validator is pinned
+to an immutable catalogue release and its `validated` output must be `true`;
+an omitted opt-in or incomplete scan fails the gate. Run the matching check locally when
 touching those surfaces; the gate no-ops in generated projects (the
 `github.repository` guard).
 

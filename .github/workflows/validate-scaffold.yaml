@@ -47,3 +47,19 @@ jobs:
         run: sh scripts/rename-placeholders.test.sh
       - name: 🧪 Validate pre-commit mockery hook (run-mockery.sh)
         run: sh .github/scripts/run-mockery.test.sh
+      - name: Validate shell pipelines
+        id: shell-pipelines
+        uses: devantler-tech/.github/actions/validate-shell-pipelines@d02f31ab6e312eb5dfadda1d12bc358c3fcc0c92 # v2.5.16
+        with:
+          enabled: "true"
+          paths: |
+            scripts
+            .github/scripts
+      - name: Require a complete shell scan
+        env:
+          VALIDATED: ${{ steps.shell-pipelines.outputs.validated }}
+        run: |
+          if [ "$VALIDATED" != true ]; then
+            echo "::error::The shell scan did not complete; keep enabled=true and repair the reported scope or finding."
+            exit 1
+          fi

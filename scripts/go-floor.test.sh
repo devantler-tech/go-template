@@ -36,7 +36,14 @@ fi
 # the fourth component were simply never looked at -- so a malformed directive
 # could satisfy a security ratchet that had not actually parsed it. A trailing
 # `//` comment is stripped above and stays allowed.
-if ! printf '%s\n' "$go_line" | grep -qE '^[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
+version_output=$(printf '%s\n' "$go_line") || {
+  echo "FAIL: could not prepare the Go version for validation" >&2
+  exit 1
+}
+if ! grep -qE '^[0-9]+\.[0-9]+(\.[0-9]+)?$' <<EOF
+$version_output
+EOF
+then
   echo "FAIL: go.mod go directive is not a bare version: '${go_line}'" >&2
   exit 1
 fi
