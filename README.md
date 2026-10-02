@@ -89,6 +89,10 @@ setup, so your project keeps up without copying files by hand. Files fall into t
 - **Used once** — the rename script and the template's own `validate-scaffold.yaml` check. Delete
   them after setup and syncs will not bring them back.
 
+The template's scaffold check also scans its shell scripts with the shared shell-pipeline
+validator at an immutable release pin. It checks both script directories, requires a completed
+scan, and leaves the existing onboarding and mockery checks in place.
+
 In devantler-tech repositories releases and the sync work out of the box. Elsewhere, take two
 steps:
 

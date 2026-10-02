@@ -82,7 +82,12 @@ grep -qF -- "--template devantler-tech/go-template" README.md ||
 	fail "--template upstream link was not preserved"
 
 # 4) No stray temp files left behind by the in-place sed.
-if git status --porcelain --untracked-files=all | grep -q '\.rename\.'; then
+status_output=$(git status --porcelain --untracked-files=all) ||
+	fail "could not inspect the renamed repository for leftover temporary files"
+if grep -q '\.rename\.' <<EOF
+$status_output
+EOF
+then
 	fail "stray *.rename.* temp file left behind"
 fi
 
