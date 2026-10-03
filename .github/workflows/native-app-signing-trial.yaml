@@ -1,0 +1,13 @@
+name: Native application signing evidence
+on:
+  push:
+    branches: [codex/native-app-caller-414]
+permissions: {}
+jobs:
+  trial:
+    permissions:
+      contents: read
+      id-token: write
+    uses: devantler-tech/.github/.github/workflows/native-app-signing-trial.yaml@1c7db1c1ea4be409d3b983423d90f6ced3cb45bf
+    with:
+      trial-head: 1c7db1c1ea4be409d3b983423d90f6ced3cb45bf
