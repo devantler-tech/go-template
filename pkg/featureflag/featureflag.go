@@ -47,9 +47,11 @@ func NewProvider(flags map[string]bool) memprovider.InMemoryProvider {
 		}
 
 		memFlags[key] = memprovider.InMemoryFlag{
-			State:          memprovider.Enabled,
-			DefaultVariant: variant,
-			Variants:       map[string]any{"on": true, "off": false},
+			Key:              "",
+			State:            memprovider.Enabled,
+			DefaultVariant:   variant,
+			Variants:         map[string]any{"on": true, "off": false},
+			ContextEvaluator: nil,
 		}
 	}
 

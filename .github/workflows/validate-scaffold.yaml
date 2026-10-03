@@ -49,9 +49,8 @@ jobs:
         run: sh .github/scripts/run-mockery.test.sh
       - name: Validate shell pipelines
         id: shell-pipelines
-        uses: devantler-tech/.github/actions/validate-shell-pipelines@d02f31ab6e312eb5dfadda1d12bc358c3fcc0c92 # v2.5.16
+        uses: devantler-tech/.github/actions/validate-shell-pipelines@4ddc63e74ffba23c243bde73755786fae56bef9e # v4.8.1
         with:
-          enabled: "true"
           paths: |
             scripts
             .github/scripts
@@ -60,6 +59,6 @@ jobs:
           VALIDATED: ${{ steps.shell-pipelines.outputs.validated }}
         run: |
           if [ "$VALIDATED" != true ]; then
-            echo "::error::The shell scan did not complete; keep enabled=true and repair the reported scope or finding."
+            echo "::error::The shell scan did not complete; require enforcement and repair the reported scope or finding."
             exit 1
           fi
