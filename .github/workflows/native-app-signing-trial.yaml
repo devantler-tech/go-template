@@ -8,6 +8,6 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: devantler-tech/.github/.github/workflows/native-app-signing-trial.yaml@1c7db1c1ea4be409d3b983423d90f6ced3cb45bf
+    uses: devantler-tech/.github/.github/workflows/native-app-signing-trial.yaml@0760338a9ce21299bd2fcbe079bbf360a1c1b661
     with:
-      trial-head: 1c7db1c1ea4be409d3b983423d90f6ced3cb45bf
+      trial-head: 0760338a9ce21299bd2fcbe079bbf360a1c1b661
