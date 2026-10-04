@@ -84,6 +84,15 @@ an explicitly disabled or incomplete scan fails the gate. Run the matching check
 touching those surfaces; the gate no-ops in generated projects (the
 `github.repository` guard).
 
+The template opts into excluding root `vendor/` and `third_party/` comments from
+TODO issue creation, while preserving project integration and project-owned comments.
+The scaffold gate also replays the exact released scanner image with caller-derived
+inputs. Its native controls reject disabled filtering, overbroad ignores and corrupt
+issue payloads without creating live issues or using project credentials. Run
+`bash .github/scripts/verify-vendored-comment-scan.sh <clean-catalogue-checkout>`;
+the checkout must match the immutable TODO caller pin. `--check-fixtures` validates
+the fixture join locally; native replay requires the Linux CI runner and Docker.
+
 ## Maintenance (autonomous AI assistant)
 
 These conventions guide the autonomous **Agentic Engineer** — and any

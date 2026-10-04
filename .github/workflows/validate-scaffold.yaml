@@ -47,6 +47,24 @@ jobs:
         run: sh scripts/rename-placeholders.test.sh
       - name: 🧪 Validate pre-commit mockery hook (run-mockery.sh)
         run: sh .github/scripts/run-mockery.test.sh
+      - name: Checkout the reviewed TODO catalogue
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: devantler-tech/.github
+          ref: 86bc63287e60cb91bc60be6ec23cae3b7f90c5dd # v6.0.3
+          path: .reviewed-todo-catalogue
+          persist-credentials: false
+      - name: Set up the reviewed catalogue test toolchain
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          # Scaffold checks above retain the template floor; this replay builds catalogue helpers.
+          go-version-file: .reviewed-todo-catalogue/.github/tests/todo-scanner/go.mod
+          cache: false
+      - name: Verify native vendored comment filtering
+        env:
+          GOCACHE: ${{ runner.temp }}/todo-go-cache
+          GOMODCACHE: ${{ runner.temp }}/todo-go-modules
+        run: bash .github/scripts/verify-vendored-comment-scan.sh .reviewed-todo-catalogue
       - name: Validate shell pipelines
         id: shell-pipelines
         uses: devantler-tech/.github/actions/validate-shell-pipelines@4ddc63e74ffba23c243bde73755786fae56bef9e # v4.8.1
