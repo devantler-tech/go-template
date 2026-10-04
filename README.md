@@ -97,12 +97,12 @@ In devantler-tech repositories releases and the sync work out of the box. Elsewh
 steps:
 
 1. Install a GitHub App on your repository with write access to contents, issues, pull requests
-   and workflows. Add its private key as the `APP_PRIVATE_KEY` secret and its client ID as the
-   `APP_CLIENT_ID` variable; releases then tag on merge. Set the variable
-   `TEMPLATE_SYNC_ENABLED=true` to turn the sync on too.
+    and workflows. Add its private key as the `APP_PRIVATE_KEY` secret and its client ID as the
+    `APP_CLIENT_ID` variable; releases then tag on merge. Set the variable
+    `TEMPLATE_SYNC_ENABLED=true` to turn the sync on too.
 2. Replace `.github/workflows/ci.yaml` with your own build and test jobs — the synced one only
-   collects the checks that devantler-tech's organisation rules add — and list it in
-   `.templatesyncignore` so syncs keep your version.
+    collects the checks that devantler-tech's organisation rules add — and list it in
+    `.templatesyncignore` so syncs keep your version.
 
 ## 🤖 Maintenance
 
