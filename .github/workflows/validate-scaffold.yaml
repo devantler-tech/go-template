@@ -58,7 +58,7 @@ jobs:
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           # Scaffold checks above retain the template floor; this replay builds catalogue helpers.
-          go-version-file: .reviewed-todo-catalogue/go.mod
+          go-version-file: .reviewed-todo-catalogue/.github/tests/todo-scanner/go.mod
           cache: false
       - name: Verify native vendored comment filtering
         env:
