@@ -11,8 +11,8 @@ floor_minor=25
 floor_patch=13
 
 if [ ! -f "$mod" ]; then
-  echo "FAIL: go.mod missing" >&2
-  exit 1
+	echo "FAIL: go.mod missing" >&2
+	exit 1
 fi
 
 go_line=$(awk '
@@ -27,8 +27,8 @@ go_line=$(awk '
 ' "$mod")
 
 if [ -z "$go_line" ]; then
-  echo "FAIL: no go directive in go.mod" >&2
-  exit 1
+	echo "FAIL: no go directive in go.mod" >&2
+	exit 1
 fi
 
 # Validate the WHOLE directive, not just its first field. Taking `$2` accepted
@@ -37,15 +37,14 @@ fi
 # could satisfy a security ratchet that had not actually parsed it. A trailing
 # `//` comment is stripped above and stays allowed.
 version_output=$(printf '%s\n' "$go_line") || {
-  echo "FAIL: could not prepare the Go version for validation" >&2
-  exit 1
+	echo "FAIL: could not prepare the Go version for validation" >&2
+	exit 1
 }
-if ! grep -qE '^[0-9]+\.[0-9]+(\.[0-9]+)?$' <<EOF
+if ! grep -qE '^[0-9]+\.[0-9]+(\.[0-9]+)?$' <<EOF; then
 $version_output
 EOF
-then
-  echo "FAIL: go.mod go directive is not a bare version: '${go_line}'" >&2
-  exit 1
+	echo "FAIL: go.mod go directive is not a bare version: '${go_line}'" >&2
+	exit 1
 fi
 
 IFS=.
@@ -57,24 +56,24 @@ minor=${2:-0}
 patch=${3:-0}
 
 case "${major}${minor}${patch}" in
-  *[!0-9]*)
-    echo "FAIL: unparseable go version '${go_line}'" >&2
-    exit 1
-    ;;
+*[!0-9]*)
+	echo "FAIL: unparseable go version '${go_line}'" >&2
+	exit 1
+	;;
 esac
 
 ok=0
 if [ "$major" -gt "$floor_major" ]; then
-  ok=1
+	ok=1
 elif [ "$major" -eq "$floor_major" ] && [ "$minor" -gt "$floor_minor" ]; then
-  ok=1
+	ok=1
 elif [ "$major" -eq "$floor_major" ] && [ "$minor" -eq "$floor_minor" ] && [ "$patch" -ge "$floor_patch" ]; then
-  ok=1
+	ok=1
 fi
 
 if [ "$ok" -ne 1 ]; then
-  echo "FAIL: go.mod go ${go_line} is below the security floor ${floor_major}.${floor_minor}.${floor_patch}" >&2
-  exit 1
+	echo "FAIL: go.mod go ${go_line} is below the security floor ${floor_major}.${floor_minor}.${floor_patch}" >&2
+	exit 1
 fi
 
 echo "ok go ${go_line} >= ${floor_major}.${floor_minor}.${floor_patch}"
