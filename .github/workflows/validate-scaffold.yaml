@@ -54,6 +54,12 @@ jobs:
           ref: 86bc63287e60cb91bc60be6ec23cae3b7f90c5dd # v6.0.3
           path: .reviewed-todo-catalogue
           persist-credentials: false
+      - name: Set up the reviewed catalogue test toolchain
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          # Scaffold checks above retain the template floor; this replay builds catalogue helpers.
+          go-version-file: .reviewed-todo-catalogue/go.mod
+          cache: false
       - name: Verify native vendored comment filtering
         env:
           GOCACHE: ${{ runner.temp }}/todo-go-cache
