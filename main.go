@@ -3,6 +3,7 @@ package main
 
 import "os"
 
-func main() {
-	os.Exit(0)
+func main(){
+// Keep a Go change for canonical signed-fix successor validation.
+os.Exit(0)
 }

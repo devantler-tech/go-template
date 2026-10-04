@@ -1,0 +1,27 @@
+name: Canonical Go signed-fix canary
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  validate:
+    if: >-
+      github.repository == 'devantler-tech/go-template'
+      && github.event.pull_request.head.repo.full_name == github.repository
+      && github.event.pull_request.user.login == 'devantler'
+      && github.head_ref == 'codex/canonical-go-canary-238-round36'
+    uses: devantler-tech/.github/.github/workflows/validate-go-project.yaml@bd0035dd8f41fcf1459b878882b8897443f8dc59 # v4.9.4
+    with:
+      pr-owner: devantler
+      apply-signed-fixes: false
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+      code-quality: write
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
