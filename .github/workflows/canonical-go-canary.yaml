@@ -17,7 +17,7 @@ jobs:
     uses: devantler-tech/.github/.github/workflows/validate-go-project.yaml@bd0035dd8f41fcf1459b878882b8897443f8dc59 # v4.9.4
     with:
       pr-owner: devantler
-      apply-signed-fixes: false
+      apply-signed-fixes: true
     permissions:
       contents: read
       issues: write
