@@ -46,13 +46,16 @@ golangci-lint run        # run the configured linters
 Workflow YAML changes should pass `actionlint`.
 
 These local checks are for **fast feedback**. CI gates Go on this repository in
-two ways. The `Validate Scaffold` job (below) renames the scaffold into a
-throwaway copy and runs `go build ./...` and `go test ./...` against it
+two ways. The shared `validate-go-project.yaml` workflow from
+`devantler-tech/.github` is required on every PR and merge-queue entry. On a PR
+that changes Go it runs the tidy, `golangci-lint`, dead-code,
+vulnerability-scan, MegaLinter, build, test and coverage jobs against this
+repository as it is; each job skips itself when the change does not touch what
+it checks, and all of them skip on a merge-queue entry. Separately, the
+`Validate Scaffold` job (below) renames the scaffold into a throwaway copy and
+runs `go build ./...` and `go test ./...` against that copy
 (`scripts/rename-placeholders.test.sh`), so a scaffold that stops building or
-testing fails a PR. The shared `validate-go-project.yaml` workflow from
-`devantler-tech/.github` is required on every PR and merge-queue entry, and adds
-the tidy, `golangci-lint`, dead-code, vulnerability-scan and MegaLinter jobs;
-each job skips itself when the change does not touch what it checks. A **PR**
+testing once renamed fails a PR even when no Go file changed. A **PR**
 is gated by `Validate Scaffold`, `CI - Required Checks` (a trivial aggregator in
 the repo's own `ci.yaml`), that Go validation workflow, and the other
 org-required workflows — CodeQL (`Analyze (go)` / `Analyze (actions)`), Scan for
@@ -165,7 +168,7 @@ plus an `--experimental` opt-in (or a config gate), and only add the SDK where
 richer evaluation is genuinely needed. Same default-off, remove-after-rollout
 lifecycle either way.
 
-**Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run` — local checks for fast feedback; CI lints through the org-required `validate-go-project.yaml` workflow and builds and tests through the `Validate Scaffold` job's smoke of a renamed scaffold copy (see *Validation* above), so don't add heavy Go jobs to `ci.yaml`. Workflows → `actionlint`.
+**Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run` — local checks for fast feedback; CI lints, builds and tests this repository through the org-required `validate-go-project.yaml` workflow, and separately builds and tests a renamed scaffold copy in the `Validate Scaffold` job (see *Validation* above), so don't add heavy Go jobs to `ci.yaml`. Workflows → `actionlint`.
 
 **Task menu** (light; ≤1 high-value item per run):
 
