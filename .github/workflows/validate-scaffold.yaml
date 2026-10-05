@@ -47,11 +47,23 @@ jobs:
         run: sh scripts/rename-placeholders.test.sh
       - name: 🧪 Validate pre-commit mockery hook (run-mockery.sh)
         run: sh .github/scripts/run-mockery.test.sh
+      # The replay below must run the catalogue revision todos.yaml calls. Read it
+      # from that caller instead of repeating it here: a dependency update moves
+      # only the `uses:` line, so a second copy goes stale and fails this job.
+      - name: Resolve the reviewed TODO catalogue revision
+        id: todo-catalogue
+        run: |
+          revision="$(sed -nE 's|^[[:space:]]*uses: devantler-tech/\.github/\.github/workflows/scan-for-todo-comments\.yaml@([0-9a-f]{40})([[:space:]].*)?$|\1|p' .github/workflows/todos.yaml)"
+          [[ "$revision" =~ ^[0-9a-f]{40}$ ]] || {
+            echo "::error::todos.yaml must call the canonical TODO workflow at exactly one full commit"
+            exit 1
+          }
+          echo "revision=$revision" >>"$GITHUB_OUTPUT"
       - name: Checkout the reviewed TODO catalogue
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: devantler-tech/.github
-          ref: 86bc63287e60cb91bc60be6ec23cae3b7f90c5dd # v6.0.3
+          ref: ${{ steps.todo-catalogue.outputs.revision }}
           path: .reviewed-todo-catalogue
           persist-credentials: false
       - name: Set up the reviewed catalogue test toolchain
