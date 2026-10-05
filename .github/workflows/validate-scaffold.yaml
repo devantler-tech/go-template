@@ -67,7 +67,7 @@ jobs:
         run: bash .github/scripts/verify-vendored-comment-scan.sh .reviewed-todo-catalogue
       - name: Validate shell pipelines
         id: shell-pipelines
-        uses: devantler-tech/.github/actions/validate-shell-pipelines@4ddc63e74ffba23c243bde73755786fae56bef9e # v4.8.1
+        uses: devantler-tech/.github/actions/validate-shell-pipelines@74e540657860f2a53dbf2646394149268c974d47 # v6.2.3
         with:
           paths: |
             scripts
