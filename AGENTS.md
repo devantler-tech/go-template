@@ -51,7 +51,11 @@ two ways. The shared `validate-go-project.yaml` workflow from
 that changes Go it runs the tidy, `golangci-lint`, dead-code,
 vulnerability-scan, MegaLinter, build, test and coverage jobs against this
 repository as it is; each job skips itself when the change does not touch what
-it checks, and all of them skip on a merge-queue entry. Separately, the
+it checks, and all of them skip on a merge-queue entry. When a lint or tidy
+job can fix what it finds, it pushes the fix to the pull-request branch as a
+signed `botantler-1[bot]` commit instead of failing (never on a fork or a
+dependency-bot branch), so the head moves and any review of the earlier head
+is stale. Separately, the
 `Validate Scaffold` job (below) renames the scaffold into a throwaway copy and
 runs `go build ./...` and `go test ./...` against that copy
 (`scripts/rename-placeholders.test.sh`), so a scaffold that stops building or
