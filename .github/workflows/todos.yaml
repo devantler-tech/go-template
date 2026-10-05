@@ -10,7 +10,7 @@ on:
 
 jobs:
   todos:
-    uses: devantler-tech/.github/.github/workflows/scan-for-todo-comments.yaml@86bc63287e60cb91bc60be6ec23cae3b7f90c5dd # v6.0.3
+    uses: devantler-tech/.github/.github/workflows/scan-for-todo-comments.yaml@74e540657860f2a53dbf2646394149268c974d47 # v6.2.3
     with:
       exclude-vendored: true
     secrets:
