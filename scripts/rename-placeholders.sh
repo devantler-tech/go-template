@@ -52,10 +52,9 @@ module_output=$(printf '%s' "$new_module") || {
 	echo "error: could not prepare the module path for validation." >&2
 	exit 1
 }
-if ! grep -Eq '^[A-Za-z0-9._~-]+(/[A-Za-z0-9._~-]+)+$' <<EOF
+if ! grep -Eq '^[A-Za-z0-9._~-]+(/[A-Za-z0-9._~-]+)+$' <<EOF; then
 $module_output
 EOF
-then
 	echo "error: '$new_module' does not look like a module path (host/owner/name)." >&2
 	exit 1
 fi

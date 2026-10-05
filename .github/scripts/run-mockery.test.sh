@@ -27,8 +27,14 @@ script="$repo_root/.github/scripts/run-mockery.sh"
 # PATH, so it must not depend on PATH to locate the interpreter itself.
 bash_bin="$(command -v bash)"
 
-[ -f "$script" ] || { echo "FAIL: $script not found" >&2; exit 1; }
-[ -n "$bash_bin" ] || { echo "FAIL: bash not on PATH" >&2; exit 1; }
+[ -f "$script" ] || {
+	echo "FAIL: $script not found" >&2
+	exit 1
+}
+[ -n "$bash_bin" ] || {
+	echo "FAIL: bash not on PATH" >&2
+	exit 1
+}
 
 fail() {
 	echo "FAIL: $*" >&2
@@ -44,7 +50,7 @@ mkdir -p "$work1"
 out1="$tmp/out1"
 err1="$tmp/err1"
 rc=0
-( cd "$work1" && PATH="" "$bash_bin" "$script" ) >"$out1" 2>"$err1" || rc=$?
+(cd "$work1" && PATH="" "$bash_bin" "$script") >"$out1" 2>"$err1" || rc=$?
 [ "$rc" -eq 0 ] || fail "no-config case should exit 0, got $rc (stderr: $(cat "$err1"))"
 [ -s "$out1" ] && fail "no-config case must be silent on stdout, got: $(cat "$out1")"
 [ -s "$err1" ] && fail "no-config case must be silent on stderr, got: $(cat "$err1")"
@@ -56,7 +62,7 @@ mkdir -p "$work2"
 err2="$tmp/err2"
 rc=0
 # PATH="" makes `command -v mockery` inside the script fail deterministically.
-( cd "$work2" && PATH="" "$bash_bin" "$script" ) >/dev/null 2>"$err2" || rc=$?
+(cd "$work2" && PATH="" "$bash_bin" "$script") >/dev/null 2>"$err2" || rc=$?
 [ "$rc" -eq 1 ] || fail "missing-mockery case should exit 1, got $rc"
 grep -qi 'mockery not found' "$err2" || fail "missing-mockery case must explain the failure (stderr: $(cat "$err2"))"
 grep -qi 'go install' "$err2" || fail "missing-mockery case must print the install hint (stderr: $(cat "$err2"))"
@@ -66,7 +72,7 @@ work2b="$tmp/config-yaml-no-mockery"
 mkdir -p "$work2b"
 : >"$work2b/.mockery.yaml"
 rc=0
-( cd "$work2b" && PATH="" "$bash_bin" "$script" ) >/dev/null 2>/dev/null || rc=$?
+(cd "$work2b" && PATH="" "$bash_bin" "$script") >/dev/null 2>/dev/null || rc=$?
 [ "$rc" -eq 1 ] || fail ".mockery.yaml should also trigger the run path (exit 1 when mockery absent), got $rc"
 
 # --- Case 3: config present, mockery present -> it is exec'd -------------------
@@ -85,7 +91,7 @@ exit 0
 EOF
 chmod +x "$stubbin/mockery"
 rc=0
-( cd "$work3" && PATH="$stubbin" "$bash_bin" "$script" ) >/dev/null 2>/dev/null || rc=$?
+(cd "$work3" && PATH="$stubbin" "$bash_bin" "$script") >/dev/null 2>/dev/null || rc=$?
 [ "$rc" -eq 0 ] || fail "present-mockery case should exit 0 (exec mockery), got $rc"
 [ -f "$marker" ] || fail "present-mockery case must exec mockery (stub marker not written)"
 

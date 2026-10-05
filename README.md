@@ -63,13 +63,13 @@ To format Go code on every commit, install [pre-commit](https://pre-commit.com/)
 
 ## 📝 Everyday commands
 
-| Task | Command |
-| --- | --- |
+| Task             | Command                                 |
+|------------------|-----------------------------------------|
 | Add a dependency | `go get example.com/awesome-lib@latest` |
-| Build | `go build ./...` |
-| Run | `go run .` |
-| Test | `go test ./...` |
-| Lint | `golangci-lint run` |
+| Build            | `go build ./...`                        |
+| Run              | `go run .`                              |
+| Test             | `go test ./...`                         |
+| Lint             | `golangci-lint run`                     |
 
 `.golangci.yml` lets non-test code import only the standard library and OpenFeature, so add each
 new dependency to its `depguard` allowlist.
