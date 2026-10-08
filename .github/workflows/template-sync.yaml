@@ -29,7 +29,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: devantler-tech/.github/.github/workflows/template-sync.yaml@ef34177c48310d4e8d6605233cb7218b926dcc55 # v7.2.11
+    uses: devantler-tech/.github/.github/workflows/template-sync.yaml@54738f4eeba4daae8da69484fe3d550800dbff41 # v7.6.0
     with:
       source-repo-path: devantler-tech/go-template
       # Push with the App token: GITHUB_TOKEN can never update workflow files, so a
