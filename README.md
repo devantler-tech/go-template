@@ -99,11 +99,19 @@ setup, so your project keeps up without copying files by hand. Files fall into t
   shared lint configs (`.mega-linter.yml`, `.pre-commit-config.yaml`, `.editorconfig`,
   `.gitattributes`) and the `CLAUDE.md`/`GEMINI.md` shims. Change these in the template, not in
   your copy.
-- **Yours** — everything listed in [`.templatesyncignore`](.templatesyncignore), which a sync never
-  touches: your Go module and code, `README.md`, `CONTRIBUTING.md`, `AGENTS.md`, `LICENSE`, `CODEOWNERS`, and the
+- **Yours** — everything listed in your project's own `.templatesyncignore`, which a sync never
+  touches. The [supplied file](.templatesyncignore) protects your Go module and code, `README.md`,
+  `CONTRIBUTING.md`, `AGENTS.md`, `LICENSE`, `CODEOWNERS`, and the
   configs you tailor, such as `.golangci.yml`, `.releaserc`, `dependabot.yaml` and `cspell.json`.
 - **Used once** — the rename script and the template's own `validate-scaffold.yaml` check. Delete
   them after setup and syncs will not bring them back.
+
+**Existing projects need a one-time documentation migration.** The sync action does not copy
+updates to `.templatesyncignore` itself. Before accepting a sync that introduces this contribution
+guide, add the literal line `CONTRIBUTING.md` to your project's own `.templatesyncignore` and commit
+it, preserving your existing guide. Projects created from the updated template already include
+that entry. Review future ownership changes in your own ignore file too; an upstream addition
+does not automatically protect an older project.
 
 The template's scaffold check also scans its shell scripts with the shared shell-pipeline
 validator at an immutable release pin. It checks both script directories, requires a completed

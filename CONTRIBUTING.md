@@ -8,8 +8,11 @@ stays minimal. Report sensitive vulnerabilities through the repository's private
 form, never a public issue or PR.
 
 This guide is for **upstream template contributions**. If you created your own project from the
-template, replace it with your project's instructions. `CONTRIBUTING.md` is instance-owned in
-[.templatesyncignore](.templatesyncignore), so sync will not replace your tailored guide.
+template, replace it with your project's instructions. Newly created projects include
+`CONTRIBUTING.md` in [.templatesyncignore](.templatesyncignore). Older projects must add and
+commit that entry in their own ignore file before accepting a sync that introduces this guide:
+sync does not propagate changes to the ignore file itself. Once that entry is present in your
+project, sync preserves your tailored guide.
 
 ## Make a first upstream change
 
