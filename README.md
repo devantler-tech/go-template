@@ -78,13 +78,13 @@ how to check it.
 
 ## 📝 Everyday commands
 
-| Task             | Command                                 |
-|------------------|-----------------------------------------|
-| Add a dependency | `go get MODULE@VERSION`                 |
-| Build            | `go build ./...`                        |
-| Run              | `go run .`                              |
-| Test             | `go test ./...`                         |
-| Lint             | `golangci-lint run`                     |
+| Task             | Command                 |
+|------------------|-------------------------|
+| Add a dependency | `go get MODULE@VERSION` |
+| Build            | `go build ./...`        |
+| Run              | `go run .`              |
+| Test             | `go test ./...`         |
+| Lint             | `golangci-lint run`     |
 
 `MODULE` and `VERSION` are placeholders for your chosen dependency and compatible release.
 `.golangci.yml` lets non-test code import only the standard library and OpenFeature, so add each
