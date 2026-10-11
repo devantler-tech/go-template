@@ -107,11 +107,12 @@ setup, so your project keeps up without copying files by hand. Files fall into t
   them after setup and syncs will not bring them back.
 
 **Existing projects need a one-time documentation migration.** The sync action does not copy
-updates to `.templatesyncignore` itself. Before accepting a sync that introduces this contribution
-guide, add the literal line `CONTRIBUTING.md` to your project's own `.templatesyncignore` and commit
-it, preserving your existing guide. Projects created from the updated template already include
-that entry. Review future ownership changes in your own ignore file too; an upstream addition
-does not automatically protect an older project.
+updates to `.templatesyncignore` itself. Before the sync runs, add the literal line
+`CONTRIBUTING.md` to your project's own `.templatesyncignore` and commit it. If a sync PR is
+already open, restore your tailored guide and commit the ignore entry before merging that PR:
+adding an ignore entry does not undo changes already proposed. Projects created from the updated
+template already include that entry. Review future ownership changes in your own ignore file too;
+an upstream addition does not automatically protect an older project.
 
 The template's scaffold check also scans its shell scripts with the shared shell-pipeline
 validator at an immutable release pin. It checks both script directories, requires a completed
