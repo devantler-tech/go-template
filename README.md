@@ -1,6 +1,6 @@
 # Go Template
 
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/devantler-tech/go-template)](https://goreportcard.com/report/github.com/devantler-tech/go-template)
 [![Go Reference](https://pkg.go.dev/badge/github.com/devantler-tech/go-template.svg)](https://pkg.go.dev/github.com/devantler-tech/go-template)
 
@@ -36,12 +36,18 @@ repositories and usable anywhere.
 - **Instructions for AI agents** — [`AGENTS.md`](AGENTS.md) gives coding agents such as Claude,
   Copilot and Cursor the project's conventions and validation commands.
 
-The minimum Go version is whatever [`go.mod`](go.mod) declares.
+The minimum Go version is whatever [`go.mod`](go.mod) declares. This is a starter, not a runnable
+application: its entry point intentionally does nothing until you add your own code.
 
 ## 🚀 Get started
 
-Create your repository from the template with the [GitHub CLI](https://cli.github.com/), point the
-module at it, and confirm it builds:
+You need Git, a Go toolchain meeting [`go.mod`](go.mod), and network access to download Go modules.
+For the command-line route, also install the [GitHub CLI](https://cli.github.com/) and sign in to
+your own GitHub account. Start in the directory where you want a new project checkout.
+
+The next command **creates a public GitHub repository** in your account and clones it locally.
+Replace `my-project` with your chosen name; use `--private` instead of `--public` if it should not
+be public. Only run it when you intend to create that repository:
 
 ```bash
 gh repo create my-project --template devantler-tech/go-template --public --clone
@@ -50,27 +56,37 @@ scripts/rename-placeholders.sh
 go build ./... && go test ./...
 ```
 
+Success means the build exits 0 and the example and feature-flag tests pass. `go run .` is quiet
+because the starter's main function is a no-op; it does not start a server or deploy anything.
+
 The rename script replaces the template's module path in `go.mod`, the Go imports and the README
 badges with your repository's path, read from its `origin` remote, then runs `go mod tidy`. Pass a
 path such as `github.com/acme/widget` to choose it yourself, and review the result with `git diff`.
+Run it only in the project you created, not in an upstream template contribution checkout.
 
 Prefer the browser? Click **Use this template** on the
 [repository page](https://github.com/devantler-tech/go-template), clone your new repository, and run
-the last two commands.
+`scripts/rename-placeholders.sh` followed by the build/test command from its root. Choose the new
+repository's owner and visibility before creating it in the browser.
 
 To format Go code on every commit, install [pre-commit](https://pre-commit.com/) and run
-`pre-commit install` once.
+`pre-commit install` once from your project root. This optional step changes that checkout's Git
+hooks; it is not needed for the initial build/test. Remove those hooks with `pre-commit uninstall`
+if you no longer want them. Linting also requires a golangci-lint v2 release compatible with the
+project's Go version; the [contributor guide](CONTRIBUTING.md#make-a-first-upstream-change) explains
+how to check it.
 
 ## 📝 Everyday commands
 
-| Task             | Command                                 |
-|------------------|-----------------------------------------|
-| Add a dependency | `go get example.com/awesome-lib@latest` |
-| Build            | `go build ./...`                        |
-| Run              | `go run .`                              |
-| Test             | `go test ./...`                         |
-| Lint             | `golangci-lint run`                     |
+| Task             | Command                 |
+|------------------|-------------------------|
+| Add a dependency | `go get MODULE@VERSION` |
+| Build            | `go build ./...`        |
+| Run              | `go run .`              |
+| Test             | `go test ./...`         |
+| Lint             | `golangci-lint run`     |
 
+`MODULE` and `VERSION` are placeholders for your chosen dependency and compatible release.
 `.golangci.yml` lets non-test code import only the standard library and OpenFeature, so add each
 new dependency to its `depguard` allowlist.
 
@@ -83,11 +99,19 @@ setup, so your project keeps up without copying files by hand. Files fall into t
   shared lint configs (`.mega-linter.yml`, `.pre-commit-config.yaml`, `.editorconfig`,
   `.gitattributes`) and the `CLAUDE.md`/`GEMINI.md` shims. Change these in the template, not in
   your copy.
-- **Yours** — everything listed in [`.templatesyncignore`](.templatesyncignore), which a sync never
-  touches: your Go module and code, `README.md`, `AGENTS.md`, `LICENSE`, `CODEOWNERS`, and the
+- **Yours** — everything listed in your project's own `.templatesyncignore`, which a sync never
+  touches. The [supplied file](.templatesyncignore) protects your Go module and code, `README.md`,
+  `CONTRIBUTING.md`, `AGENTS.md`, `LICENSE`, `CODEOWNERS`, and the
   configs you tailor, such as `.golangci.yml`, `.releaserc`, `dependabot.yaml` and `cspell.json`.
 - **Used once** — the rename script and the template's own `validate-scaffold.yaml` check. Delete
   them after setup and syncs will not bring them back.
+
+**Existing projects need a one-time documentation migration.** The sync action does not copy
+updates to `.templatesyncignore` itself. Before accepting a sync that introduces this contribution
+guide, add the literal line `CONTRIBUTING.md` to your project's own `.templatesyncignore` and commit
+it, preserving your existing guide. Projects created from the updated template already include
+that entry. Review future ownership changes in your own ignore file too; an upstream addition
+does not automatically protect an older project.
 
 The template's scaffold check also scans its shell scripts with the shared shell-pipeline
 validator at an immutable release pin. It checks both script directories, requires a completed
@@ -104,7 +128,13 @@ steps:
     collects the checks that devantler-tech's organisation rules add — and list it in
     `.templatesyncignore` so syncs keep your version.
 
+## Contributing
+
+Want to improve the template itself? Follow [CONTRIBUTING.md](CONTRIBUTING.md) for a safe upstream
+checkout, local checks and submission. In a generated project, replace this link's guide with
+that project's contribution instructions; the documentation is instance-owned.
+
 ## 🤖 Maintenance
 
-An autonomous AI agent maintains this template. Conventions, validation commands and the
-contribution workflow are in [`AGENTS.md`](AGENTS.md).
+An autonomous AI agent maintains this template. Its canonical engineering contract and full
+validation matrix are in [`AGENTS.md`](AGENTS.md). Preserve the [Apache-2.0 license](LICENSE).

@@ -8,10 +8,9 @@ point) plus the house tooling — linting, CI/CD, releases, and editor/agent
 configuration — so a new module can start from a clean, current baseline. The
 module path is `github.com/devantler-tech/go-template`; the minimum Go version
 is whatever `go.mod` declares — the single source of truth, so it never drifts
-from this prose. That floor currently sits on the 1.25.x toolchain (raised from
-1.24 because the reusable Dead Code Analysis check installs `deadcode`, which
-requires Go ≥ 1.25); the requirement is tooling-driven, not a language-feature
-need.
+from this prose. The floor is tooling-driven, not a language-feature need; the
+toolchain-floor policy below explains how it is maintained without another
+version pin here.
 
 ## Repository structure
 
@@ -132,8 +131,8 @@ product features.
 
 **Toolchain-floor policy.** The Go floor in `go.mod` is the **single source of
 truth** and is **tooling-driven**: it equals the **highest minimum the house
-tooling requires** — today Go 1.25, because the shared `validate-go-project`
-Dead Code Analysis step installs `deadcode` (needs Go ≥ 1.25) — *not* "latest
+tooling requires** (for example, the shared `validate-go-project` Dead Code
+Analysis step installs `deadcode`) — *not* "latest
 Go" and *not* a language-feature choice. Bump it **only** when a shared-tooling
 requirement forces it (or a security / end-of-life reason), never
 speculatively, and **record the trigger in the PR body**. Don't over-raise:
