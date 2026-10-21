@@ -1,14 +1,14 @@
 #!/usr/bin/env sh
 # Hermetic ratchet: go.mod's language version must stay at or above the
-# security floor that independently clears the 1.25.12 stdlib advisories.
-# A later bump still passes; 1.25.12 fails. No network.
+# security floor that independently clears GO-2026-6809 (crypto/x509).
+# A later bump still passes; 1.26.9 fails. No network.
 set -eu
 
 root=$(git rev-parse --show-toplevel)
 mod="${root}/go.mod"
 floor_major=1
-floor_minor=25
-floor_patch=13
+floor_minor=26
+floor_patch=10
 
 if [ ! -f "$mod" ]; then
 	echo "FAIL: go.mod missing" >&2
