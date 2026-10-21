@@ -8,6 +8,7 @@ trap 'rm -rf "$work"' EXIT HUP INT TERM
 git -C "$work" init -q
 cp "$root/scripts/go-floor.test.sh" "$work/ratchet.sh"
 
+# check compares the isolated ratchet's exit result with the expected verdict.
 check() {
 	directive=$1 expected=$2
 	printf 'module example.test/scaffold\n\ngo %s\n' "$directive" >"$work/go.mod"
