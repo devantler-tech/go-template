@@ -43,7 +43,11 @@ go test ./...
 golangci-lint run        # run the configured linters
 ```
 
-Workflow YAML changes should pass `actionlint`.
+Workflow YAML changes should pass `actionlint`. Version 1.7.12 does not yet
+recognize GitHub's `code-quality` permission. With that version, run
+`actionlint -ignore 'unknown permission scope "code-quality"'`; this suppresses
+only the unsupported scope diagnostic, not other workflow errors. Retain
+`code-quality: write` for the shared validator's coverage upload.
 
 These local checks are for **fast feedback**. The repository's own `ci.yaml`
 calls the pinned shared `validate-go-project.yaml` workflow from
@@ -165,7 +169,12 @@ plus an `--experimental` opt-in (or a config gate), and only add the SDK where
 richer evaluation is genuinely needed. Same default-off, remove-after-rollout
 lifecycle either way.
 
-**Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run`. CI calls the shared Go validator from the native `ci.yaml` and separately builds/tests a renamed scaffold in `Validate Scaffold`. Keep the job implementation shared, not duplicated inline. Workflow changes also require `actionlint` and `bash .github/scripts/ci-contract.test.sh`.
+**Validate before any PR (locally):** `golangci-lint fmt` (if configured),
+`go build ./... && go test ./...`, `golangci-lint run`. CI calls the shared Go
+validator from the native `ci.yaml` and separately builds/tests a renamed
+scaffold in `Validate Scaffold`. Keep the job implementation shared, not
+duplicated inline. Workflow changes also require the version-compatible
+`actionlint` invocation in *Validation* and `bash .github/scripts/ci-contract.test.sh`.
 
 **Task menu** (light; ≤1 high-value item per run):
 
