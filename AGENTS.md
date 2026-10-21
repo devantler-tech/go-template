@@ -29,13 +29,14 @@ version pin here.
 - `scripts/rename-placeholders.sh` — one-shot onboarding: repoints the module path (`go.mod`, Go imports, README badges) to a new project's path, leaving the upstream **Use this template** links intact.
 - `scripts/rename-placeholders.test.sh` — end-to-end test for the onboarding script: runs it against a throwaway copy, then asserts the module repoint, the badge rewrite, the upstream-link preservation, no stray temp files, and that the renamed scaffold builds/tests. Run with `sh scripts/rename-placeholders.test.sh`; CI runs it via `validate-scaffold.yaml`.
 - `scripts/validate-agent-shims.test.sh` — hermetic structural check that both tool-specific shims contain exactly `@AGENTS.md` plus one newline. Run with `sh scripts/validate-agent-shims.test.sh`; CI runs it via `validate-scaffold.yaml`.
-- `scripts/go-floor.test.sh` — hermetic ratchet that `go.mod`'s `go` directive stays at or above `1.25.13` (the lowest 1.25 patch that clears the 1.25.12 stdlib advisories). Run with `sh scripts/go-floor.test.sh`; CI runs it via `validate-scaffold.yaml`.
+- `scripts/go-floor.test.sh` — hermetic ratchet that `go.mod`'s `go` directive stays at or above `1.26.10` (the lowest supported 1.26 patch that clears GO-2026-6809), also rejecting affected `1.27.0`–`1.27.2` directives. Run with `sh scripts/go-floor.test.sh`; CI runs it via `validate-scaffold.yaml`. Its `--self-test` mode checks the real ratchet's acceptance and rejection boundaries and existing template-only sync exclusion in a disposable repository, without adding scaffolding files to existing generated projects.
 
 ## Validation
 
 Run these locally before opening a PR:
 
 ```bash
+sh scripts/go-floor.test.sh --check-toolchain # reject an affected newer installed compiler too
 golangci-lint fmt        # apply configured formatters (gci, gofmt, gofumpt, goimports, golines, swaggo)
 go build ./...
 go test ./...
@@ -46,7 +47,7 @@ Workflow YAML changes should pass `actionlint`.
 
 These local checks are for **fast feedback**. CI gates Go on this repository in
 two ways. The shared `validate-go-project.yaml` workflow from
-`devantler-tech/actions` is required on every PR that targets the default
+`devantler-tech/.github` is required on every PR that targets the default
 branch, and on that branch's merge-queue entries. On a PR
 that changes Go it runs the tidy, `golangci-lint`, dead-code,
 vulnerability-scan, MegaLinter, build, test and coverage jobs against this
@@ -74,7 +75,7 @@ ruleset (context: `CI - Required Checks`). The Go validation workflow comes from
 the organization rule `require-go-template-validation`, declared in
 `devantler-tech/.github` under `deploy/organization-rulesets/`; it targets only
 this repository's default branch and runs the workflow from the `main` branch
-of `devantler-tech/actions`, so a pull
+of `devantler-tech/.github`, so a pull
 request here cannot change the gate it is judged by. The older property-based
 "…for Go" ruleset still does not target this repo. Keep `ci.yaml` the
 trivial aggregator it is — do **not** add heavy Go build/test/lint jobs to it

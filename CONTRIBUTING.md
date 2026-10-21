@@ -37,6 +37,7 @@ script for their own initial setup, as the [README](README.md#-get-started) expl
 From the repository root, run the required local baseline, including for documentation PRs:
 
 ```sh
+sh scripts/go-floor.test.sh --check-toolchain
 golangci-lint fmt
 go build ./...
 go test ./...
@@ -47,6 +48,12 @@ git diff --check
 Each command must exit 0; the tests report passing packages. Formatting can change Go files, so
 inspect the diff and include only intentional changes. These checks are local feedback, not a
 substitute for native CI or current-head review.
+
+The first check inspects the compiler Go actually selects, not just the module's minimum.
+If it rejects your installed compiler, install a patched supported release listed in
+[the upstream advisory](https://pkg.go.dev/vuln/GO-2026-6809), then rerun the first command;
+meeting the minimum with a newer but affected compiler is not sufficient. It does not install
+software or change your environment.
 
 For this README's onboarding instructions, also exercise the scaffold in disposable copies:
 
