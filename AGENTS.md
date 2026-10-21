@@ -76,11 +76,13 @@ Separately, `Validate Scaffold` renames the scaffold in a disposable copy and
 builds/tests that copy even when no Go file changed. It runs only on PRs to
 this template, not on merge-group entries or in generated projects. The
 portfolio's required status aggregate and cross-repository security workflows
-remain in force. During the ownership cutover, the old
-`require-go-template-validation` organization workflow deliberately overlaps
-the native caller. Retire that rule only through its owning `.github` deploy
-configuration after repository enforcement and native execution are verified;
-a required check's name alone is not trusted workflow-source authentication.
+remain in force. The repository-owned validation rule requires the native
+`CI - Required Checks` from GitHub Actions on the default branch, without bypasses.
+The template-only organization workflow has been retired after native positive
+and intentional-failure controls. Keep the shared implementation in the catalogue
+and the callsite here. Generated projects configure their own branch protection;
+copying this template does not copy its ruleset. A required check's producer binding
+alone is not immutable workflow-source authentication.
 
 The scaffold's **non-Go integrity checks** are the template-repo-specific gate,
 run by their own template-repo-only workflow, `validate-scaffold.yaml`. It runs
