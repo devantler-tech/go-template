@@ -8,12 +8,36 @@ on:
 permissions: {}
 
 jobs:
+  go-validation:
+    uses: devantler-tech/.github/.github/workflows/validate-go-project.yaml@0c7b6c3509b73adbc7537e030935bb01987e625b # v7.23.0
+    permissions:
+      contents: read
+      pull-requests: write # lint summaries; no branch-writing token on candidate runners
+      issues: write # lint summaries
+      code-quality: write # coverage upload
+    with:
+      pr-owner: ${{ github.event.pull_request.user.login }}
+      # An independent generated project needs no App key for validation.
+      apply-signed-fixes: ${{ github.repository_owner == 'devantler-tech' }}
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+
   required-checks:
     name: CI - Required Checks
+    needs: [go-validation]
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: ✅ Require checks in PR
-        uses: devantler-tech/.github/actions/aggregate-job-checks@0c7b6c3509b73adbc7537e030935bb01987e625b # v7.23.0
-        with:
-          job-results: ""
+      - name: Require completed Go validation
+        id: result
+        env:
+          VALIDATION_RESULT: ${{ needs.go-validation.result }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          case "$EVENT_NAME:$VALIDATION_RESULT" in
+            pull_request:success|merge_group:success|merge_group:skipped) ;;
+            *)
+              echo "::error::Go validation did not succeed ($EVENT_NAME: $VALIDATION_RESULT)"
+              exit 1
+              ;;
+          esac
