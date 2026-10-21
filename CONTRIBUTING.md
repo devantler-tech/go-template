@@ -76,6 +76,9 @@ For CI caller or aggregate changes, run `bash .github/scripts/ci-contract.test.s
 (Mike Farah's `yq` v4 and `jq` required). It executes the actual aggregate against successful,
 failed, cancelled, abandoned, skipped and missing validation results. The template's CI calls
 the shared Go validator itself; no organization workflow injection is needed to make that call.
+The upstream repository requires its native `CI - Required Checks` aggregate through a
+repository ruleset, alongside the shared cross-repository checks. Generated projects must
+configure that requirement themselves; workflow files do not carry branch protection with them.
 
 ## Submit your change
 

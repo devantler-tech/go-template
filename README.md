@@ -120,15 +120,17 @@ scan, and leaves the existing onboarding and mockery checks in place.
 
 In devantler-tech repositories releases and the sync work out of the box. Elsewhere:
 
-1. Install a GitHub App on your repository with write access to contents, issues, pull requests
-    and workflows. Add its private key as the `APP_PRIVATE_KEY` secret and its client ID as the
-    `APP_CLIENT_ID` variable; releases then tag on merge. Set the variable
-    `TEMPLATE_SYNC_ENABLED=true` to turn the sync on too.
-2. Keep the supplied `.github/workflows/ci.yaml` for Go validation and require its
+1. Keep the supplied `.github/workflows/ci.yaml` for Go validation and require its
     `CI - Required Checks` status in your repository's branch protection or ruleset. Validation
-    does not need the App key outside devantler-tech: apply any reported fixes yourself.
+    does not need an App key outside devantler-tech: apply any reported fixes yourself.
+    Generated projects get the callsite, not this template's repository ruleset.
     If you replace the pipeline, list `.github/workflows/ci.yaml` in `.templatesyncignore` so
     syncs keep your version. Fork PRs run read-only; repository publishing remains separate.
+2. When you want automated releases, install a suitable existing GitHub App on your repository
+    (or create one if needed) with write access to contents, issues, pull requests and workflows.
+    Add its private key as the `APP_PRIVATE_KEY` secret and its client ID as the
+    `APP_CLIENT_ID` variable; releases then tag on merge. Set the variable
+    `TEMPLATE_SYNC_ENABLED=true` to turn the sync on too.
 
 ## Contributing
 
