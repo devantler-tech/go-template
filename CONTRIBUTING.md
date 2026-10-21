@@ -36,6 +36,10 @@ script for their own initial setup, as the [README](README.md#-get-started) expl
 
 From the repository root, run the required local baseline, including for documentation PRs:
 
+The first command uses Go's normal toolchain selection. Depending on your existing
+`GOTOOLCHAIN` setting, Go may download and cache a compiler before the check returns.
+The check does not change your saved Go settings.
+
 ```sh
 sh scripts/go-floor.test.sh --check-toolchain
 golangci-lint fmt
@@ -52,8 +56,7 @@ substitute for native CI or current-head review.
 The first check inspects the compiler Go actually selects, not just the module's minimum.
 If it rejects your installed compiler, install a patched supported release listed in
 [the upstream advisory](https://pkg.go.dev/vuln/GO-2026-6809), then rerun the first command;
-meeting the minimum with a newer but affected compiler is not sufficient. It does not install
-software or change your environment.
+meeting the minimum with a newer but affected compiler is not sufficient.
 
 For this README's onboarding instructions, also exercise the scaffold in disposable copies:
 
