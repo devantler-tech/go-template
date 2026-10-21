@@ -5,7 +5,10 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 workflow="${1:-$root/.github/workflows/ci.yaml}"
 scratch="$(mktemp -d)"
 trap 'rm -rf "$scratch"' EXIT
-fail() { echo "CI contract: $*" >&2; exit 1; }
+fail() {
+	echo "CI contract: $*" >&2
+	exit 1
+}
 yq -o=json '.' "$workflow" >"$scratch/workflow.json"
 jq -e '
   .on | has("pull_request") and has("merge_group")
@@ -28,19 +31,19 @@ jq -e '
 ' "$scratch/workflow.json" >/dev/null || fail 'native validator must feed the always-running reducer with bounded permissions'
 yq -r '.jobs.required-checks.steps[] | select(.id == "result") | .run' "$workflow" >"$scratch/reducer.sh"
 for event in pull_request merge_group; do
-  for result in success failure cancelled abandoned skipped missing; do
-    value="$result"
-    [[ "$result" != missing ]] || value=''
-    expected=1
-    case "$event:$result" in
-      pull_request:success|merge_group:success|merge_group:skipped) expected=0 ;;
-    esac
-    actual=0
-    VALIDATION_RESULT="$value" EVENT_NAME="$event" bash -euo pipefail "$scratch/reducer.sh" >"$scratch/output" 2>&1 || actual=$?
-    if [[ "$actual" != "$expected" ]]; then
-      cat "$scratch/output" >&2
-      fail "$event/$result returned $actual, expected $expected"
-    fi
-  done
+	for result in success failure cancelled abandoned skipped missing; do
+		value="$result"
+		[[ "$result" != missing ]] || value=''
+		expected=1
+		case "$event:$result" in
+		pull_request:success | merge_group:success | merge_group:skipped) expected=0 ;;
+		esac
+		actual=0
+		VALIDATION_RESULT="$value" EVENT_NAME="$event" bash -euo pipefail "$scratch/reducer.sh" >"$scratch/output" 2>&1 || actual=$?
+		if [[ "$actual" != "$expected" ]]; then
+			cat "$scratch/output" >&2
+			fail "$event/$result returned $actual, expected $expected"
+		fi
+	done
 done
 echo 'CI contract: native caller and 12 real reducer outcomes passed'
