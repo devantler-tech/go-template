@@ -107,7 +107,10 @@ if [ "$mode" = --check-toolchain ]; then
 	}
 	case "$go_line" in
 	go[0-9]*) go_line=${go_line#go} ;;
-	*) echo 'FAIL: selected Go toolchain has an unsupported version' >&2; exit 1 ;;
+	*)
+		echo 'FAIL: selected Go toolchain has an unsupported version' >&2
+		exit 1
+		;;
 	esac
 else
 	go_line=$(awk '
