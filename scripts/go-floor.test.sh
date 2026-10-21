@@ -45,14 +45,49 @@ if [ "${1:-}" = --self-test ]; then
 	check 1.26.10.99 fail
 	check '' fail
 	check devel fail
+	mkdir "$work/bin"
+	cat >"$work/bin/go" <<'GO'
+#!/usr/bin/env sh
+[ "$*" = "env GOVERSION" ] || exit 2
+printf '%s\n' "$TEST_GOVERSION"
+GO
+	chmod +x "$work/bin/go"
+	# check_toolchain probes selected-version handling without downloading Go.
+	check_toolchain() {
+		version=$1 expected=$2
+		if (cd "$work" && PATH="$work/bin:$PATH" TEST_GOVERSION="$version" sh ./ratchet.sh --check-toolchain) >"$work/result" 2>&1; then
+			actual=pass
+		else
+			actual=fail
+		fi
+		if [ "$actual" != "$expected" ]; then
+			printf 'FAIL: toolchain %s: expected %s, got %s\n' "$version" "$expected" "$actual" >&2
+			cat "$work/result" >&2
+			exit 1
+		fi
+	}
+	check_toolchain go1.26.9 fail
+	check_toolchain go1.26.10 pass
+	check_toolchain go1.27.0 fail
+	check_toolchain go1.27.1 fail
+	check_toolchain go1.27.2 fail
+	check_toolchain go1.27.3 pass
+	check_toolchain go1.28.0 pass
+	check_toolchain devel fail
+	check_toolchain '' fail
 	grep -Fx 'scripts/go-floor.test.sh' "$root/.templatesyncignore" >/dev/null || {
 		printf 'FAIL: template-only regression harness must be excluded from sync\n' >&2
 		exit 1
 	}
-	printf 'PASS: 16 Go security-floor regression controls and sync exclusion\n'
+	printf 'PASS: 16 directive and 9 selected-toolchain controls, plus sync exclusion\n'
 	exit 0
 fi
-[ "$#" -eq 0 ] || exit 2
+mode=${1:-directive}
+case "$mode" in
+directive) [ "$#" -eq 0 ] || exit 2 ;;
+--check-toolchain) [ "$#" -eq 1 ] || exit 2 ;;
+*) exit 2 ;;
+esac
 mod="${root}/go.mod"
 floor_major=1
 floor_minor=26
@@ -63,7 +98,19 @@ if [ ! -f "$mod" ]; then
 	exit 1
 fi
 
-go_line=$(awk '
+version_source=directive
+if [ "$mode" = --check-toolchain ]; then
+	version_source=toolchain
+	go_line=$(go env GOVERSION) || {
+		echo 'FAIL: could not resolve the selected Go toolchain' >&2
+		exit 1
+	}
+	case "$go_line" in
+	go[0-9]*) go_line=${go_line#go} ;;
+	*) echo 'FAIL: selected Go toolchain has an unsupported version' >&2; exit 1 ;;
+	esac
+else
+	go_line=$(awk '
   /^[[:space:]]*\/\// { next }
   /^[[:space:]]*go[[:space:]]+/ {
     sub(/^[[:space:]]*go[[:space:]]+/, "")
@@ -73,6 +120,7 @@ go_line=$(awk '
     exit
   }
 ' "$mod")
+fi
 
 if [ -z "$go_line" ]; then
 	echo "FAIL: no go directive in go.mod" >&2
@@ -91,7 +139,7 @@ version_output=$(printf '%s\n' "$go_line") || {
 if ! grep -qE '^[0-9]+\.[0-9]+(\.[0-9]+)?$' <<EOF; then
 $version_output
 EOF
-	echo "FAIL: go.mod go directive is not a bare version: '${go_line}'" >&2
+	echo "FAIL: Go $version_source is not a bare version: '${go_line}'" >&2
 	exit 1
 fi
 
@@ -112,7 +160,7 @@ esac
 
 ok=0
 if [ "$major" -eq 1 ] && [ "$minor" -eq 27 ] && [ "$patch" -lt 3 ]; then
-	echo "FAIL: go.mod go ${go_line} is affected by GO-2026-6809; the 1.27 line requires 1.27.3" >&2
+	echo "FAIL: Go $version_source ${go_line} is affected by GO-2026-6809; select a patched supported toolchain" >&2
 	exit 1
 fi
 if [ "$major" -gt "$floor_major" ]; then
@@ -124,8 +172,8 @@ elif [ "$major" -eq "$floor_major" ] && [ "$minor" -eq "$floor_minor" ] && [ "$p
 fi
 
 if [ "$ok" -ne 1 ]; then
-	echo "FAIL: go.mod go ${go_line} is below the security floor ${floor_major}.${floor_minor}.${floor_patch}" >&2
+	echo "FAIL: Go $version_source ${go_line} is below the security floor ${floor_major}.${floor_minor}.${floor_patch}" >&2
 	exit 1
 fi
 
-echo "ok go ${go_line} >= ${floor_major}.${floor_minor}.${floor_patch}"
+echo "ok Go $version_source ${go_line} >= ${floor_major}.${floor_minor}.${floor_patch}"

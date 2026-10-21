@@ -46,7 +46,7 @@ jobs:
         with:
           go-version-file: go.mod
       - name: 🧱 Validate onboarding (rename-placeholders.sh)
-        run: sh scripts/rename-placeholders.test.sh
+        run: sh scripts/go-floor.test.sh --check-toolchain && sh scripts/rename-placeholders.test.sh
       - name: 🧪 Validate pre-commit mockery hook (run-mockery.sh)
         run: sh .github/scripts/run-mockery.test.sh
       # The replay below must run the catalogue revision todos.yaml calls. Read it

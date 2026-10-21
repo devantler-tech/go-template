@@ -36,6 +36,7 @@ version pin here.
 Run these locally before opening a PR:
 
 ```bash
+sh scripts/go-floor.test.sh --check-toolchain # reject an affected newer installed compiler too
 golangci-lint fmt        # apply configured formatters (gci, gofmt, gofumpt, goimports, golines, swaggo)
 go build ./...
 go test ./...
