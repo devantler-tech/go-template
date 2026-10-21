@@ -16,9 +16,8 @@ permissions: {}
 #     copied guidance would create a second source that silently drifts.
 # This job runs ONLY in the template repo; it no-ops in projects created from it
 # (the guard below is false there), mirroring how cd.yaml/release.yaml run only
-# downstream. Generated projects delete the onboarding script and gate their own
-# code through whatever Go workflow their organisation injects (see AGENTS.md
-# *Validation*) — this repo has no such injection.
+# downstream. Generated projects delete the onboarding script and retain the
+# native Go validation callsite in ci.yaml (see AGENTS.md *Validation*).
 jobs:
   validate-scaffold:
     name: Validate Scaffold
@@ -37,6 +36,8 @@ jobs:
           persist-credentials: false # read-only job; never pushes
       - name: 🤖 Validate agent instruction shims
         run: sh scripts/validate-agent-shims.test.sh
+      - name: Validate the native CI caller and reducer
+        run: bash .github/scripts/ci-contract.test.sh
       - name: Check Go language-version floor
         run: sh scripts/go-floor.test.sh
       - name: Check security-floor rejection controls

@@ -72,6 +72,11 @@ or rename your upstream checkout. CI additionally checks shell pipelines and rep
 TODO scanner on a Linux runner. See [AGENTS.md validation](AGENTS.md#validation) for the full
 matrix and surface-specific checks; workflow edits also require `actionlint`.
 
+For CI caller or aggregate changes, run `bash .github/scripts/ci-contract.test.sh` too
+(Mike Farah's `yq` v4 and `jq` required). It executes the actual aggregate against successful,
+failed, cancelled, abandoned, skipped and missing validation results. The template's CI calls
+the shared Go validator itself; no organization workflow injection is needed to make that call.
+
 ## Submit your change
 
 Review the diff, configure commit signing and stage explicit changed paths. For a README edit:

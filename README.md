@@ -29,10 +29,10 @@ repositories and usable anywhere.
   `main` tags the next version. The tag makes [GoReleaser](https://goreleaser.com/) build your
   binaries and attach them to a GitHub release. Outside devantler-tech, tagging needs the GitHub
   App set up under [Staying current](#-staying-current).
-- **CI and dependency updates** — a required-checks workflow gates pull requests and the merge
-  queue, and [Dependabot](https://docs.github.com/code-security/dependabot) keeps Go modules and
-  pinned GitHub Actions current. In devantler-tech repositories, organisation rules add the Go
-  build, test, lint and coverage jobs.
+- **CI and dependency updates** — the repository's CI calls a pinned shared Go validator for
+  build, test, lint, security and coverage, then checks its result. It works without organization
+  workflow injection. [Dependabot](https://docs.github.com/code-security/dependabot) keeps Go
+  modules and pinned GitHub Actions current.
 - **Instructions for AI agents** — [`AGENTS.md`](AGENTS.md) gives coding agents such as Claude,
   Copilot and Cursor the project's conventions and validation commands.
 
@@ -118,16 +118,17 @@ The template's scaffold check also scans its shell scripts with the shared shell
 validator at an immutable release pin. It checks both script directories, requires a completed
 scan, and leaves the existing onboarding and mockery checks in place.
 
-In devantler-tech repositories releases and the sync work out of the box. Elsewhere, take two
-steps:
+In devantler-tech repositories releases and the sync work out of the box. Elsewhere:
 
 1. Install a GitHub App on your repository with write access to contents, issues, pull requests
     and workflows. Add its private key as the `APP_PRIVATE_KEY` secret and its client ID as the
     `APP_CLIENT_ID` variable; releases then tag on merge. Set the variable
     `TEMPLATE_SYNC_ENABLED=true` to turn the sync on too.
-2. Replace `.github/workflows/ci.yaml` with your own build and test jobs — the synced one only
-    collects the checks that devantler-tech's organisation rules add — and list it in
-    `.templatesyncignore` so syncs keep your version.
+2. Keep the supplied `.github/workflows/ci.yaml` for Go validation and require its
+    `CI - Required Checks` status in your repository's branch protection or ruleset. Validation
+    does not need the App key outside devantler-tech: apply any reported fixes yourself.
+    If you replace the pipeline, list `.github/workflows/ci.yaml` in `.templatesyncignore` so
+    syncs keep your version. Fork PRs run read-only; repository publishing remains separate.
 
 ## Contributing
 

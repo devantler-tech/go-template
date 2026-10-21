@@ -43,49 +43,44 @@ go test ./...
 golangci-lint run        # run the configured linters
 ```
 
-Workflow YAML changes should pass `actionlint`.
+Workflow YAML changes should pass `actionlint`. Version 1.7.12 does not yet
+recognize GitHub's `code-quality` permission. With that version, run
+`actionlint -ignore 'unknown permission scope "code-quality"'`; this suppresses
+only the unsupported scope diagnostic, not other workflow errors. Retain
+`code-quality: write` for the shared validator's coverage upload.
 
-These local checks are for **fast feedback**. CI gates Go on this repository in
-two ways. The shared `validate-go-project.yaml` workflow from
-`devantler-tech/.github` is required on every PR that targets the default
-branch, and on that branch's merge-queue entries. On a PR
-that changes Go it runs the tidy, `golangci-lint`, dead-code,
-vulnerability-scan, MegaLinter, build, test and coverage jobs against this
-repository as it is; each job skips itself when the change does not touch what
-it checks, and all of them skip on a merge-queue entry. When a lint or tidy
-job can fix what it finds, it pushes the fix to the pull-request branch as a
-signed `botantler-1[bot]` commit instead of failing (never on a fork or a
-dependency-bot branch), so the head moves and any review of the earlier head
-is stale. Separately, the
-`Validate Scaffold` job (below) renames the scaffold into a throwaway copy and
-runs `go build ./...` and `go test ./...` against that copy
-(`scripts/rename-placeholders.test.sh`), so a scaffold that stops building or
-testing once renamed fails a PR even when no Go file changed. A **PR**
-is gated by `Validate Scaffold`, `CI - Required Checks` (a trivial aggregator in
-the repo's own `ci.yaml`), that Go validation workflow, and the other
-org-required workflows — CodeQL (`Analyze (go)` / `Analyze (actions)`), Scan for
-Workflow Vulnerabilities (`zizmor`), Dependency Review, and Enable Auto-Merge
-(`eligibility`). The **merge queue**
-runs `ci.yaml` **plus** those org-required workflows — they all declare
-`merge_group` and complete via no-op eligibility paths, so they appear in the
-merge-group check set too. Only `validate-scaffold.yaml` is
-`pull_request`-only, so `Validate Scaffold` does **not** run on a merge-group
-SHA. Required status checks come from the org "Require status checks to pass"
-ruleset (context: `CI - Required Checks`). The Go validation workflow comes from
-the organization rule `require-go-template-validation`, declared in
-`devantler-tech/.github` under `deploy/organization-rulesets/`; it targets only
-this repository's default branch and runs the workflow from the `main` branch
-of `devantler-tech/.github`, so a pull
-request here cannot change the gate it is judged by. The older property-based
-"…for Go" ruleset still does not target this repo. Keep `ci.yaml` the
-trivial aggregator it is — do **not** add heavy Go build/test/lint jobs to it
-(see go-template#76, closed as invalid).
+These local checks are for **fast feedback**. The repository's own `ci.yaml`
+calls the pinned shared `validate-go-project.yaml` workflow from
+`devantler-tech/.github`, passing the PR author explicitly. It retains tidy,
+`golangci-lint`, dead-code analysis, vulnerability scanning, MegaLinter, build,
+tests and coverage. Individual jobs select relevant changes; merge-group
+entries retain the validator's intentional eligibility no-ops.
 
-**Generated** projects gate Go build/test differently — **not** via the
-scaffolded `ci.yaml`, which is the same empty aggregator. **devantler-tech**
-instances get build/test from org-injected ruleset workflows; instances
-**outside** devantler-tech inherit no real build/test workflow and must replace
-`ci.yaml` with their own (see the README and `.templatesyncignore`).
+`CI - Required Checks` always runs after that call. A failed, cancelled,
+abandoned, missing or skipped PR validation fails the aggregate; only a
+merge-group entry may skip the validator. Its real shell decision and caller
+wiring are exercised by `bash .github/scripts/ci-contract.test.sh` (requires
+Mike Farah's `yq` v4 and `jq`; available on the GitHub-hosted Linux runner).
+The scaffold gate runs this regression test too. Do not restore an empty
+aggregate or duplicate the shared implementation in this repository.
+
+Within devantler-tech, eligible same-repository PRs retain signed App-authored
+lint/tidy fixes. Forks and dependency-bot branches stay read-only; a fix changes
+the head and makes earlier review stale. Outside the organization, the native
+caller disables signed fixes, needs no App key for validation, and fails when
+a correction needs applying. Generated projects inherit this working callsite
+without organization workflow injection; a project that replaces it must
+protect its customized `ci.yaml` through its own `.templatesyncignore`.
+
+Separately, `Validate Scaffold` renames the scaffold in a disposable copy and
+builds/tests that copy even when no Go file changed. It runs only on PRs to
+this template, not on merge-group entries or in generated projects. The
+portfolio's required status aggregate and cross-repository security workflows
+remain in force. During the ownership cutover, the old
+`require-go-template-validation` organization workflow deliberately overlaps
+the native caller. Retire that rule only through its owning `.github` deploy
+configuration after repository enforcement and native execution are verified;
+a required check's name alone is not trusted workflow-source authentication.
 
 The scaffold's **non-Go integrity checks** are the template-repo-specific gate,
 run by their own template-repo-only workflow, `validate-scaffold.yaml`. It runs
@@ -174,7 +169,12 @@ plus an `--experimental` opt-in (or a config gate), and only add the SDK where
 richer evaluation is genuinely needed. Same default-off, remove-after-rollout
 lifecycle either way.
 
-**Validate before any PR (locally):** `golangci-lint fmt` (if configured), `go build ./... && go test ./...`, `golangci-lint run` — local checks for fast feedback; CI lints, builds and tests this repository through the org-required `validate-go-project.yaml` workflow, and separately builds and tests a renamed scaffold copy in the `Validate Scaffold` job (see *Validation* above), so don't add heavy Go jobs to `ci.yaml`. Workflows → `actionlint`.
+**Validate before any PR (locally):** `golangci-lint fmt` (if configured),
+`go build ./... && go test ./...`, `golangci-lint run`. CI calls the shared Go
+validator from the native `ci.yaml` and separately builds/tests a renamed
+scaffold in `Validate Scaffold`. Keep the job implementation shared, not
+duplicated inline. Workflow changes also require the version-compatible
+`actionlint` invocation in *Validation* and `bash .github/scripts/ci-contract.test.sh`.
 
 **Task menu** (light; ≤1 high-value item per run):
 
