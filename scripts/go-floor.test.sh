@@ -1,10 +1,58 @@
 #!/usr/bin/env sh
 # Hermetic ratchet: go.mod's language version must stay at or above the
 # security floor that independently clears GO-2026-6809 (crypto/x509).
-# A later bump still passes; 1.26.9 fails. No network.
+# Later safe releases pass; the advisory also excludes 1.27.0–1.27.2. No network.
 set -eu
 
 root=$(git rev-parse --show-toplevel)
+# Keep the regression harness inside the already sync-excluded scaffold gate.
+if [ "${1:-}" = --self-test ]; then
+	[ "$#" -eq 1 ] || exit 2
+	work=$(mktemp -d)
+	trap 'rm -rf "$work"' EXIT HUP INT TERM
+	git -C "$work" init -q
+	cp "$root/scripts/go-floor.test.sh" "$work/ratchet.sh"
+
+	# check compares the isolated ratchet's exit result with the expected verdict.
+	check() {
+		directive=$1 expected=$2
+		printf 'module example.test/scaffold\n\ngo %s\n' "$directive" >"$work/go.mod"
+		if (cd "$work" && sh ./ratchet.sh) >"$work/result" 2>&1; then
+			actual=pass
+		else
+			actual=fail
+		fi
+		if [ "$actual" != "$expected" ]; then
+			printf 'FAIL: directive %s: expected %s, got %s\n' "$directive" "$expected" "$actual" >&2
+			cat "$work/result" >&2
+			exit 1
+		fi
+	}
+
+	check 1.25.13 fail
+	check 1.26.0 fail
+	check 1.26.9 fail
+	check 1.26.10 pass
+	check 1.26.11 pass
+	check 1.27.0 fail
+	check 1.27.1 fail
+	check 1.27.2 fail
+	check 1.27.3 pass
+	check 1.27.4 pass
+	check 1.28.0 pass
+	check '1.26.10 // patched minimum' pass
+	check '1.26.10 extra' fail
+	check 1.26.10.99 fail
+	check '' fail
+	check devel fail
+	grep -Fx 'scripts/go-floor.test.sh' "$root/.templatesyncignore" >/dev/null || {
+		printf 'FAIL: template-only regression harness must be excluded from sync\n' >&2
+		exit 1
+	}
+	printf 'PASS: 16 Go security-floor regression controls and sync exclusion\n'
+	exit 0
+fi
+[ "$#" -eq 0 ] || exit 2
 mod="${root}/go.mod"
 floor_major=1
 floor_minor=26
@@ -63,6 +111,10 @@ case "${major}${minor}${patch}" in
 esac
 
 ok=0
+if [ "$major" -eq 1 ] && [ "$minor" -eq 27 ] && [ "$patch" -lt 3 ]; then
+	echo "FAIL: go.mod go ${go_line} is affected by GO-2026-6809; the 1.27 line requires 1.27.3" >&2
+	exit 1
+fi
 if [ "$major" -gt "$floor_major" ]; then
 	ok=1
 elif [ "$major" -eq "$floor_major" ] && [ "$minor" -gt "$floor_minor" ]; then

@@ -40,7 +40,7 @@ jobs:
       - name: Check Go language-version floor
         run: sh scripts/go-floor.test.sh
       - name: Check security-floor rejection controls
-        run: sh scripts/go-floor-regression.test.sh
+        run: sh scripts/go-floor.test.sh --self-test
       - name: 🐹 Set up Go
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
