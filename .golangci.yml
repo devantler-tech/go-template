@@ -15,6 +15,10 @@ linters:
     - wsl_v5
   disable:
     - exhaustruct
+    # Deprecated since golangci-lint v2.12.0; `default: all` already runs its
+    # replacement, gomodguard_v2, on releases that ship it. Disabling the old
+    # name keeps every v2 release working, since no release rejects it.
+    - gomodguard
     - wsl
   exclusions:
     paths:
