@@ -1,0 +1,28 @@
+---
+name: 🗂️ Stale Issue Triage
+
+on:
+  schedule:
+    - cron: "37 4 * * *"
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Preview without changing issues or saved progress.
+        type: boolean
+        default: true
+
+permissions: {}
+
+concurrency:
+  group: stale-issues-caller
+  cancel-in-progress: false
+
+jobs:
+  triage:
+    uses: devantler-tech/.github/.github/workflows/triage-stale-issues.yaml@613ca8ebc881c91ada0ed0065e1909845444229c  # awaiting reviewed release
+    permissions:
+      issues: write
+      actions: write
+    with:
+      enabled: true
+      dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
