@@ -2,6 +2,8 @@
 name: 🗂️ Stale Issue Triage
 
 on:
+  pull_request:
+    paths: [.github/workflows/stale-issues.yaml]
   schedule:
     - cron: "37 4 * * *"
   workflow_dispatch:
@@ -19,10 +21,12 @@ concurrency:
 
 jobs:
   triage:
-    uses: devantler-tech/.github/.github/workflows/triage-stale-issues.yaml@613ca8ebc881c91ada0ed0065e1909845444229c  # awaiting reviewed release
+    # Keep portfolio automation disabled in external template copies.
+    if: ${{ github.repository_owner == 'devantler-tech' }}
+    uses: devantler-tech/.github/.github/workflows/triage-stale-issues.yaml@f3a39508a43dd1dccec5d1c7f19962cf91982440 # v17.1.0
     permissions:
       issues: write
       actions: write
     with:
       enabled: true
-      dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
+      dry-run: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' && inputs.dry-run }}
