@@ -95,7 +95,7 @@ an explicitly disabled or incomplete scan fails the gate. Run the matching check
 touching those surfaces; the gate no-ops in generated projects (the
 `github.repository` guard).
 
-The template opts into excluding root `vendor/` and `third_party/` comments from
+The released scanner excludes root `vendor/` and `third_party/` comments by default from
 TODO issue creation, while preserving project integration and project-owned comments.
 The scaffold gate also replays the exact released scanner image with caller-derived
 inputs. Its native controls reject disabled filtering, overbroad ignores and corrupt
