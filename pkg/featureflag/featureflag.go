@@ -37,7 +37,7 @@ const ExampleFlag = "example-feature"
 //
 // In a real service, replace this with the flagd provider (or a managed
 // backend); call sites are unaffected because they only touch the client.
-func NewProvider(flags map[string]bool) memprovider.InMemoryProvider {
+func NewProvider(flags map[string]bool) *memprovider.InMemoryProvider {
 	memFlags := make(map[string]memprovider.InMemoryFlag, len(flags))
 
 	for key, on := range flags {
