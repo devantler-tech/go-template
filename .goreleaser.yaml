@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# GoReleaser configuration for the tag-triggered release in .github/workflows/cd.yaml.
+# It writes down what the release builds instead of relying on unstated defaults:
+# the same eight archives and checksum file GoReleaser's defaults produced before.
+# Tailor it to your project (binary name, platforms, ldflags); this file is yours.
+version: 2
+
+builds:
+  - main: .
+    env:
+      # Static binaries that run on any host of the target platform.
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - "386"
+      - amd64
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: "386"
+
+archives:
+  - formats:
+      - tar.gz
+
+checksum:
+  name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
+  algorithm: sha256

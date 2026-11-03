@@ -34,6 +34,7 @@ LICENSE
 # allowlist (stdlib + OpenFeature), so any real project must extend it — a
 # synced overwrite would clobber the project's dependency allowlist.
 .releaserc
+.goreleaser.yaml
 .gitignore
 .github/dependabot.yaml
 .golangci.yml

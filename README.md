@@ -27,8 +27,9 @@ repositories and usable anywhere.
 - **Releases from your commit messages** — write
   [Conventional Commits](https://www.conventionalcommits.org/), and merging a `feat:` or `fix:` to
   `main` tags the next version. The tag makes [GoReleaser](https://goreleaser.com/) build your
-  binaries and attach them to a GitHub release. Outside devantler-tech, tagging needs the GitHub
-  App set up under [Staying current](#-staying-current).
+  binaries, as [`.goreleaser.yaml`](.goreleaser.yaml) declares, and attach them to a GitHub release
+  with signed build provenance. Outside devantler-tech, tagging needs the GitHub App set up under
+  [Staying current](#-staying-current).
 - **CI and dependency updates** — the repository's CI calls a pinned shared Go validator for
   build, test, lint, security and coverage, then checks its result. It works without organization
   workflow injection. [Dependabot](https://docs.github.com/code-security/dependabot) keeps Go
@@ -90,6 +91,26 @@ how to check it.
 `.golangci.yml` lets non-test code import only the standard library and OpenFeature, so add each
 new dependency to its `depguard` allowlist.
 
+## 🔏 Verify a release download
+
+Each release archive comes with a signed
+[build provenance attestation](https://docs.github.com/actions/security-for-github-actions/using-artifact-attestations)
+that ties it to the commit and workflow run that built it. To check a download, run the GitHub CLI
+with the repository it came from:
+
+```sh
+gh attestation verify ARCHIVE --repo OWNER/REPO
+```
+
+`ARCHIVE` is the downloaded file, for example `go-template_1.5.12_linux_amd64.tar.gz`, and
+`OWNER/REPO` is the repository that published it. A file changed after release, or built anywhere
+else, fails the check.
+
+The release job asks only for what it uses: permission to publish the release and to sign and store
+its provenance. GitHub stores attestations for public repositories on every plan; a private
+repository needs GitHub Enterprise Cloud, so the release skips the attestation step while the
+repository is private.
+
 ## 🔄 Staying current
 
 Every week a template-sync workflow opens a pull request with any changes to this template's shared
@@ -102,7 +123,8 @@ setup, so your project keeps up without copying files by hand. Files fall into t
 - **Yours** — everything listed in your project's own `.templatesyncignore`, which a sync never
   touches. The [supplied file](.templatesyncignore) protects your Go module and code, `README.md`,
   `CONTRIBUTING.md`, `AGENTS.md`, `LICENSE`, `CODEOWNERS`, and the
-  configs you tailor, such as `.golangci.yml`, `.releaserc`, `dependabot.yaml` and `cspell.json`.
+  configs you tailor, such as `.golangci.yml`, `.releaserc`, `.goreleaser.yaml`, `dependabot.yaml` and
+  `cspell.json`.
 - **Used once** — the rename script and the template's own `validate-scaffold.yaml` check. Delete
   them after setup and syncs will not bring them back.
 

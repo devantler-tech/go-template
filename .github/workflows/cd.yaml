@@ -6,14 +6,16 @@ on:
       - "v*"
   workflow_dispatch:
 
-permissions:
-  contents: write
-  packages: write
+permissions: {}
 
 jobs:
   goreleaser:
     name: Release with GoReleaser
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the GitHub release and upload its archives
+      id-token: write # sign the build provenance with the workflow's identity
+      attestations: write # store the provenance attestation for the archives
     steps:
       - name: 📑 Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -38,13 +40,9 @@ jobs:
       - name: Add Go bin to PATH
         run: echo "$HOME/go/bin" >> "$GITHUB_PATH"
 
-      - name: 🔐 Login to GHCR
-        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
+      # Builds what .goreleaser.yaml declares. This job builds no container
+      # images, so it neither requests package permissions nor logs in to a
+      # registry; a project that adds images grants and adds them itself.
       - name: 🏗️ Run GoReleaser
         uses: goreleaser/goreleaser-action@a4f02ab5355a589de60d917a659ce617ed19b3de # v7.3.0
         with:
@@ -53,3 +51,25 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔎 Locate the release checksums
+        id: checksums
+        run: |
+          shopt -s nullglob
+          files=(dist/*_checksums.txt)
+          if [ "${#files[@]}" -ne 1 ]; then
+            echo "::error::expected exactly one GoReleaser checksums file in dist/, found ${#files[@]}"
+            exit 1
+          fi
+          echo "path=${files[0]}" >> "$GITHUB_OUTPUT"
+
+      # Signed build provenance for every archive listed in the checksums file,
+      # so a user can check a download with `gh attestation verify`. GitHub
+      # stores attestations for public repositories on every plan; a private
+      # repository needs GitHub Enterprise Cloud, so this step runs only when the
+      # repository is public.
+      - name: 🔏 Attest build provenance
+        if: github.event.repository.visibility == 'public'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-checksums: ${{ steps.checksums.outputs.path }}
