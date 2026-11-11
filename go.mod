@@ -1,6 +1,6 @@
 module github.com/devantler-tech/go-template
 
-go 1.26.10
+go 1.26.11
 
 require github.com/open-feature/go-sdk v1.20.0
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
 # Hermetic ratchet: go.mod's language version must stay at or above the
-# security floor that independently clears GO-2026-6809 (crypto/x509).
-# Later safe releases pass; the advisory also excludes 1.27.0–1.27.2. No network.
+# security floor that independently clears GO-2026-6809 (crypto/x509) and
+# GO-2026-6859 (net/http).
+# Later safe releases pass; the advisories also exclude 1.27.0–1.27.3. No network.
 set -eu
 
 root=$(git rev-parse --show-toplevel)
@@ -32,17 +33,17 @@ if [ "${1:-}" = --self-test ]; then
 	check 1.25.13 fail
 	check 1.26.0 fail
 	check 1.26.9 fail
-	check 1.26.10 pass
+	check 1.26.10 fail
 	check 1.26.11 pass
 	check 1.27.0 fail
 	check 1.27.1 fail
 	check 1.27.2 fail
-	check 1.27.3 pass
+	check 1.27.3 fail
 	check 1.27.4 pass
 	check 1.28.0 pass
-	check '1.26.10 // patched minimum' pass
-	check '1.26.10 extra' fail
-	check 1.26.10.99 fail
+	check '1.26.11 // patched minimum' pass
+	check '1.26.11 extra' fail
+	check 1.26.11.99 fail
 	check '' fail
 	check devel fail
 	mkdir "$work/bin"
@@ -67,11 +68,13 @@ GO
 		fi
 	}
 	check_toolchain go1.26.9 fail
-	check_toolchain go1.26.10 pass
+	check_toolchain go1.26.10 fail
+	check_toolchain go1.26.11 pass
 	check_toolchain go1.27.0 fail
 	check_toolchain go1.27.1 fail
 	check_toolchain go1.27.2 fail
-	check_toolchain go1.27.3 pass
+	check_toolchain go1.27.3 fail
+	check_toolchain go1.27.4 pass
 	check_toolchain go1.28.0 pass
 	check_toolchain devel fail
 	check_toolchain '' fail
@@ -79,7 +82,7 @@ GO
 		printf 'FAIL: template-only regression harness must be excluded from sync\n' >&2
 		exit 1
 	}
-	printf 'PASS: 16 directive and 9 selected-toolchain controls, plus sync exclusion\n'
+	printf 'PASS: 16 directive and 11 selected-toolchain controls, plus sync exclusion\n'
 	exit 0
 fi
 mode=${1:-directive}
@@ -91,7 +94,7 @@ esac
 mod="${root}/go.mod"
 floor_major=1
 floor_minor=26
-floor_patch=10
+floor_patch=11
 
 if [ ! -f "$mod" ]; then
 	echo "FAIL: go.mod missing" >&2
@@ -163,8 +166,8 @@ case "${major}${minor}${patch}" in
 esac
 
 ok=0
-if [ "$major" -eq 1 ] && [ "$minor" -eq 27 ] && [ "$patch" -lt 3 ]; then
-	echo "FAIL: Go $version_source ${go_line} is affected by GO-2026-6809; select a patched supported toolchain" >&2
+if [ "$major" -eq 1 ] && [ "$minor" -eq 27 ] && [ "$patch" -lt 4 ]; then
+	echo "FAIL: Go $version_source ${go_line} is affected by GO-2026-6809 or GO-2026-6859; select a patched supported toolchain" >&2
 	exit 1
 fi
 if [ "$major" -gt "$floor_major" ]; then
