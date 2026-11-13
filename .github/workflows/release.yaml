@@ -14,5 +14,11 @@ permissions:
 jobs:
   release:
     uses: devantler-tech/.github/.github/workflows/create-release.yaml@f33622708f9f25a32acb46cc419007e18a3223b3 # v21.3.1
+    with:
+      # Refuse every outbound host except the release jobs' measured allow-list
+      # (devantler-tech/.github#912) — in this template repository only. Generated projects
+      # own their release configuration (an asset upload needs another host), so they stay in
+      # audit mode until they opt in themselves.
+      block-egress: ${{ github.repository == 'devantler-tech/go-template' }}
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
