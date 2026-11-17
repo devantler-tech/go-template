@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   release:
-    uses: devantler-tech/.github/.github/workflows/create-release.yaml@d70d50665465117f01104313e53057374a96a1a3 # v21.7.2
+    uses: devantler-tech/.github/.github/workflows/create-release.yaml@cc156a3693019fdbe9817c46f1a91cd50a124695 # v21.7.3
     with:
       # Refuse every outbound host except the release jobs' measured allow-list
       # (devantler-tech/.github#912) — in this template repository only. Generated projects
